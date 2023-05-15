@@ -1,2 +1,3 @@
-# dreamy-farm-server
-The api server for dreamy  farm website
+# Dreamy-farm-server
+
+The api server for dreamy farm website
