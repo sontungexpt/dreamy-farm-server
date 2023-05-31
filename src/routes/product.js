@@ -1,19 +1,25 @@
-import express from "express";
-import ProductController from "~/controllers/ProductController";
+import express from 'express';
+import ProductController from '~/controllers/ProductController';
 const router = express.Router();
 
 const productController = new ProductController();
 
-router.use("/vegetables", productController.vegetables);
+// router.get('/vegetables', productController.vegetables);
 
-router.use("/herbs-armatics", productController.herbs_armatics);
+// router.get('/herbs-aromatics', productController.herbs_aromatics);
 
-router.use("/frozen", productController.frozen);
+// router.get('/frozens', productController.frozens);
 
-router.use("/meat-seafood ", productController.meat_seafood);
+// router.get('/meats-seafoods', productController.meats_seafoods);
 
-router.use("/dairy-eggs", productController.dairy_eggs);
+// router.get('/dairy-eggs', productController.dairy_eggs);
 
-router.use("/", productController.index);
+// router.get('/fruits', productController.fruits);
+
+router.post('/create', productController.create);
+
+router.get('/detail/:productId', productController.show);
+
+router.get('/:category', productController.getProductAtCategory);
 
 export default router;
