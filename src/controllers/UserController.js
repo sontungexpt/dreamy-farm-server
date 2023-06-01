@@ -55,26 +55,27 @@ class UserController {
     const { name, email, password } = req.body;
 
     const encryptedPassword = await bcrypt.hash(password, 10);
-    try {
-      const oldUser = await User.findOne({ email });
 
+    try {
+      // check if email is existed
+      const oldUser = await User.findOne({ email });
       if (oldUser) {
-        return res.json({ error: 'Email is existed' });
+        return res.json({ status: 'error', message: 'Email is existed' });
       }
 
+      // create new user
       await User.create({
         email,
         password: encryptedPassword,
       });
-
       await UserInfo.create({
         name,
         email,
       });
 
-      res.json({ status: 'ok' });
+      return res.json({ status: 'success', message: 'Register successfully' });
     } catch (error) {
-      res.json({ status: 'error' });
+      res.json({ status: 'error', message: error });
     }
   };
 
@@ -83,7 +84,7 @@ class UserController {
 
     const user = await User.findOne({ email });
     if (!user) {
-      return res.json({ error: 'User not found' });
+      return res.json({ status: 'error', message: 'User not found' });
     }
     if (await bcrypt.compare(password, user.password)) {
       const token = jwt.sign({ email: user.email }, JWT_SECRET, {
@@ -91,9 +92,13 @@ class UserController {
       });
 
       if (res.status(201)) {
-        return res.json({ status: 'ok', token: token });
+        return res.json({
+          status: 'success',
+          message: 'Login successfully',
+          token: token,
+        });
       } else {
-        return res.json({ error: 'error' });
+        return res.json({ status: 'error', message: 'error' });
       }
     }
     res.json({ status: 'error', error: 'Invalid password' });

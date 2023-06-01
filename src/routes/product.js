@@ -18,7 +18,7 @@ const productController = new ProductController();
 
 router.post('/create', productController.create);
 
-router.get('/detail/:productId', productController.show);
+router.get('/detail/:slug', productController.show);
 
 router.get('/:category', productController.getProductAtCategory);
 

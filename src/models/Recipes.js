@@ -1,8 +1,4 @@
-var slug = require('mongoose-slug-updater');
 import mongoose from 'mongoose';
-
-mongoose.plugin(slug);
-
 const Schema = mongoose.Schema;
 
 const ObjectId = Schema.ObjectId;
@@ -25,7 +21,6 @@ const Product = new Schema(
     description: { type: String, default: '' },
     sold: { type: Number, default: 0 },
     status: { type: String, default: 'active' },
-    slug: { type: String, slug: 'name', unique: true },
   },
   {
     timestamps: true,

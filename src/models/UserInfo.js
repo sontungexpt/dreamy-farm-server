@@ -25,7 +25,15 @@ const UserInfo = new Schema({
       status: { type: String, default: 'active' },
     },
   ],
-  phone: { type: String, default: '', maxlength: 10, minlength: 10 },
+  phone: {
+    type: String,
+    validate: {
+      validator: function (value) {
+        return /\d{3}-\d{3}-\d{4}/.test(value) || value === '';
+      },
+      message: (props) => `${props.value} is not a valid phone number!`,
+    },
+  },
   avatar: { type: String, default: '' },
   favorites: [{ type: ObjectId, ref: 'Product' }],
 });
