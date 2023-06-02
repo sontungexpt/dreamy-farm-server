@@ -10,4 +10,12 @@ router.post('/forgot-password', userController.forgotPassword);
 
 router.post('/login', userController.login);
 
+router.post('/userInfos', userController.getUserInfos);
+
+// router.post('/updateUserInfo', userController.updateUserInfo);
+
+router.post('/updateFavoriteProducts', userController.updateFavoriteProducts);
+
+// router.post('/getFavoriteProducts', userController.getFavoriteProducts);
+
 export default router;

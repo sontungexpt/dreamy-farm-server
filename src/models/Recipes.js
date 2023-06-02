@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 
 const ObjectId = Schema.ObjectId;
 
-const Product = new Schema(
+const Recipes = new Schema(
   {
     order: { type: ObjectId, ref: 'Order', default: null },
     name: { type: String, default: '' },
@@ -27,4 +27,4 @@ const Product = new Schema(
   },
 );
 
-export default mongoose.model('Product', Product);
+export default mongoose.model('Recipes', Recipes);

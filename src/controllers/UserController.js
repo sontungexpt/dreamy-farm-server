@@ -1,64 +1,62 @@
 'use strict';
 import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import nodemailer from 'nodemailer';
+// import nodemailer from 'nodemailer';
 
 import User from '~/models/User';
 import UserInfo from '~/models/UserInfo';
 
-const JWT_SECRET =
-  'hvdvay6ert72839289()aiyg8t87qt72393293883uhefiuh78ttq3ifi78272jbkj?[]]pou89ywe';
+import jwt from 'jsonwebtoken';
+import properties from '~/configs';
+
 class UserController {
   forgotPassword = async (req, res) => {
-    const { email } = req.body;
-    try {
-      const oldUser = await User.findOne({ email });
-      if (!oldUser) {
-        return res.json({ status: 'User Not Exists!!' });
-      }
-      const secret = JWT_SECRET + oldUser.password;
-      const token = jwt.sign(
-        { email: oldUser.email, id: oldUser._id },
-        secret,
-        {
-          expiresIn: '5m',
-        },
-      );
-      const link = `http://localhost:5000/reset-password/${oldUser._id}/${token}`;
-      var transporter = nodemailer.createTransport({
-        service: 'gmail',
-        auth: {
-          user: 'adarsh438tcsckandivali@gmail.com',
-          pass: 'rmdklolcsmswvyfw',
-        },
-      });
-
-      var mailOptions = {
-        from: 'youremail@gmail.com',
-        to: 'thedebugarena@gmail.com',
-        subject: 'Password Reset',
-        text: link,
-      };
-
-      transporter.sendMail(mailOptions, function (error, info) {
-        if (error) {
-          console.log(error);
-        } else {
-          console.log('Email sent: ' + info.response);
-        }
-      });
-      console.log(link);
-    } catch (error) {}
+    // const { email } = req.body;
+    // try {
+    //   const oldUser = await User.findOne({ email });
+    //   if (!oldUser) {
+    //     return res.json({ status: 'User Not Exists!!' });
+    //   }
+    //   const secret = properties.JWT_SECRET + oldUser.password;
+    //   const token = jwt.sign(
+    //     { email: oldUser.email, id: oldUser._id },
+    //     secret,
+    //     {
+    //       expiresIn: '5m',
+    //     },
+    //   );
+    //   const link = `http://localhost:5000/reset-password/${oldUser._id}/${token}`;
+    //   var transporter = nodemailer.createTransport({
+    //     service: 'gmail',
+    //     auth: {
+    //       user: 'adarsh438tcsckandivali@gmail.com',
+    //       pass: 'rmdklolcsmswvyfw',
+    //     },
+    //   });
+    //   var mailOptions = {
+    //     from: 'youremail@gmail.com',
+    //     to: 'thedebugarena@gmail.com',
+    //     subject: 'Password Reset',
+    //     text: link,
+    //   };
+    //   transporter.sendMail(mailOptions, function (error, info) {
+    //     if (error) {
+    //       console.log(error);
+    //     } else {
+    //       console.log('Email sent: ' + info.response);
+    //     }
+    //   });
+    //   console.log(link);
+    // } catch (error) {}
   };
 
-  register = async (req, res) => {
-    const { name, email, password } = req.body;
-
-    const encryptedPassword = await bcrypt.hash(password, 10);
-
+  register = async (req, res, next) => {
     try {
+      const { name, email, password } = req.body;
+      const encryptedPassword = await bcrypt.hash(password, 10);
+
       // check if email is existed
-      const oldUser = await User.findOne({ email });
+      const oldUser = res.locals._user;
+      // const oldUser = await User.findOne({ email });
       if (oldUser) {
         return res.json({ status: 'error', message: 'Email is existed' });
       }
@@ -79,30 +77,105 @@ class UserController {
     }
   };
 
-  login = async (req, res) => {
-    const { email, password } = req.body;
+  login = async (req, res, next) => {
+    try {
+      const user = res.locals._user;
+      const { password } = req.body;
 
-    const user = await User.findOne({ email });
-    if (!user) {
-      return res.json({ status: 'error', message: 'User not found' });
+      // if email is existed, check password
+      if (await bcrypt.compare(password, user.password)) {
+        const token = jwt.sign({ email: user.email }, properties.JWT_SECRET, {
+          expiresIn: '15m',
+        });
+
+        if (res.status(201)) {
+          return res.json({
+            status: 'success',
+            message: 'Login successfully',
+            data: token,
+          });
+        } else {
+          return res.json({ status: 'error', message: 'error' });
+        }
+      }
+
+      res.json({ status: 'error', message: 'Invalid password' });
+    } catch (error) {
+      res.json({ status: 'error', message: error });
     }
-    if (await bcrypt.compare(password, user.password)) {
-      const token = jwt.sign({ email: user.email }, JWT_SECRET, {
-        expiresIn: '15m',
+  };
+
+  getUserInfos = async (req, res) => {
+    try {
+      const user = res.locals._user;
+      const userInfo = await UserInfo.findOne({ email: user.email });
+      if (!userInfo)
+        return res.json({
+          status: 'error',
+          message: 'User infos not found',
+          data: 'User infos not found',
+        });
+
+      res.json({
+        status: 'success',
+        message: 'Get user data successfully',
+        data: userInfo,
+      });
+    } catch (error) {
+      res.send({ status: 'error', message: error });
+    }
+  };
+
+  updateFavoriteProducts = async (req, res) => {
+    try {
+      const user = res.locals._user;
+      const userInfo = await UserInfo.findOne({ email: user.email });
+      if (!userInfo) {
+        return res.json({
+          status: 'error',
+          message: 'User infos not found',
+          data: 'User infos not found',
+        });
+      }
+
+      const { productId, method } = req.body;
+
+      if (method) {
+        // pass method to middleware
+        if (method === 'add') {
+          userInfo.favoriteProducts.push(productId);
+        } else if (method === 'remove') {
+          userInfo.favoriteProducts = userInfo.favoriteProducts.filter(
+            (item) => item !== productId,
+          );
+        }
+      } else {
+        // if not pass method to middleware,
+        // update favoriteProducts with mehtod = toggle
+        const productExistIndex = userInfo.favoriteProducts.findIndex(
+          (item) => item === productId,
+        );
+        if (productExistIndex === -1) {
+          userInfo.favoriteProducts.push(productId);
+        } else {
+          userInfo.favoriteProducts = userInfo.favoriteProducts.filter(
+            (item) => item !== productId,
+          );
+        }
+      }
+      res.json({
+        status: 'success',
+        message: 'Update favorite products successfully',
+        data: userInfo.favoriteProducts,
       });
 
-      if (res.status(201)) {
-        return res.json({
-          status: 'success',
-          message: 'Login successfully',
-          token: token,
-        });
-      } else {
-        return res.json({ status: 'error', message: 'error' });
-      }
+      await userInfo.save();
+    } catch (error) {
+      res.send({ status: 'error', message: error });
     }
-    res.json({ status: 'error', error: 'Invalid password' });
   };
 }
+
+// getFavoriteProduct = async (req, res) => {};
 
 export default UserController;

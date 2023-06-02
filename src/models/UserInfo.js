@@ -15,17 +15,17 @@ const UserInfo = new Schema({
   ],
 
   // Additional information
-  fullname: { type: String, default: '' },
+  fullName: { type: String, default: '' },
+
   addreses: [
     {
-      city: { type: String, default: '' },
-      district: { type: String, default: '' },
-      ward: { type: String, default: '' },
-      street: { type: String, default: '' },
-      status: { type: String, default: 'active' },
+      type: String,
+      default: '',
     },
   ],
-  phone: {
+  addressActive: { type: Number, default: 0 },
+
+  phoneNumber: {
     type: String,
     validate: {
       validator: function (value) {
@@ -35,7 +35,7 @@ const UserInfo = new Schema({
     },
   },
   avatar: { type: String, default: '' },
-  favorites: [{ type: ObjectId, ref: 'Product' }],
+  favoriteProducts: [{ type: ObjectId, ref: 'Product' }],
 });
 
 UserInfo.index({ email: 1 });
