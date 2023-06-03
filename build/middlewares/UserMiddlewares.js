@@ -80,8 +80,9 @@ var checkUser = /*#__PURE__*/function () {
             break;
           }
           return _context2.abrupt("return", res.json({
-            status: 'error',
-            message: 'Email is required'
+            status: 'warning',
+            message: 'You need to login to use this feature',
+            required: 'email'
           }));
         case 5:
           _context2.next = 7;

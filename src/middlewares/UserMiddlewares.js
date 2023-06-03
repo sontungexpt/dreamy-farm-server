@@ -36,8 +36,9 @@ export const checkUser = async (req, res, next) => {
 
       if (!email) {
         return res.json({
-          status: 'error',
-          message: 'Email is required',
+          status: 'warning',
+          message: 'You need to login to use this feature',
+          required: 'email',
         });
       }
 

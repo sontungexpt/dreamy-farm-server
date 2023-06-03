@@ -126,10 +126,36 @@ class UserController {
     }
   };
 
+  getFavoriteProducts = async (req, res) => {
+    try {
+      const user = res.locals._user;
+      const userInfo = await UserInfo.findOne({ email: user.email })
+        .populate('favoriteProducts')
+        .exec();
+
+      if (!userInfo) {
+        return res.json({
+          status: 'error',
+          message: 'User infos not found',
+          data: 'User infos not found',
+        });
+      }
+
+      res.json({
+        status: 'success',
+        message: 'Get favorite products successfully',
+        data: userInfo.favoriteProducts,
+      });
+    } catch (error) {
+      res.send({ status: 'error', message: error });
+    }
+  };
+
   updateFavoriteProducts = async (req, res) => {
     try {
       const user = res.locals._user;
       const userInfo = await UserInfo.findOne({ email: user.email });
+
       if (!userInfo) {
         return res.json({
           status: 'error',
@@ -140,29 +166,28 @@ class UserController {
 
       const { productId, method } = req.body;
 
-      if (method) {
-        // pass method to middleware
-        if (method === 'add') {
-          userInfo.favoriteProducts.push(productId);
-        } else if (method === 'remove') {
-          userInfo.favoriteProducts = userInfo.favoriteProducts.filter(
-            (item) => item !== productId,
-          );
-        }
+      // pass method to middleware
+      if (method === 'add') {
+        userInfo.favoriteProducts.push(productId);
+      } else if (method === 'remove') {
+        userInfo.favoriteProducts = userInfo.favoriteProducts.filter(
+          (item) => item.toString() !== productId,
+        );
       } else {
         // if not pass method to middleware,
         // update favoriteProducts with mehtod = toggle
         const productExistIndex = userInfo.favoriteProducts.findIndex(
-          (item) => item === productId,
+          (item) => item.toString() === productId,
         );
         if (productExistIndex === -1) {
           userInfo.favoriteProducts.push(productId);
         } else {
           userInfo.favoriteProducts = userInfo.favoriteProducts.filter(
-            (item) => item !== productId,
+            (item) => item.toString() !== productId,
           );
         }
       }
+
       res.json({
         status: 'success',
         message: 'Update favorite products successfully',

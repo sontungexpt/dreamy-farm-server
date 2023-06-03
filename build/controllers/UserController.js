@@ -199,9 +199,9 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
       return _ref4.apply(this, arguments);
     };
   }());
-  _defineProperty(this, "updateFavoriteProducts", /*#__PURE__*/function () {
+  _defineProperty(this, "getFavoriteProducts", /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
-      var user, userInfo, _req$body2, productId, method, productExistIndex;
+      var user, userInfo;
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) switch (_context5.prev = _context5.next) {
           case 0:
@@ -210,7 +210,7 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
             _context5.next = 4;
             return _UserInfo["default"].findOne({
               email: user.email
-            });
+            }).populate('favoriteProducts').exec();
           case 4:
             userInfo = _context5.sent;
             if (userInfo) {
@@ -223,27 +223,76 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
               data: 'User infos not found'
             }));
           case 7:
+            res.json({
+              status: 'success',
+              message: 'Get favorite products successfully',
+              data: userInfo.favoriteProducts
+            });
+            _context5.next = 13;
+            break;
+          case 10:
+            _context5.prev = 10;
+            _context5.t0 = _context5["catch"](0);
+            res.send({
+              status: 'error',
+              message: _context5.t0
+            });
+          case 13:
+          case "end":
+            return _context5.stop();
+        }
+      }, _callee5, null, [[0, 10]]);
+    }));
+    return function (_x11, _x12) {
+      return _ref5.apply(this, arguments);
+    };
+  }());
+  _defineProperty(this, "updateFavoriteProducts", /*#__PURE__*/function () {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
+      var user, userInfo, _req$body2, productId, method, productExistIndex;
+      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+        while (1) switch (_context6.prev = _context6.next) {
+          case 0:
+            _context6.prev = 0;
+            user = res.locals._user;
+            _context6.next = 4;
+            return _UserInfo["default"].findOne({
+              email: user.email
+            });
+          case 4:
+            userInfo = _context6.sent;
+            if (userInfo) {
+              _context6.next = 7;
+              break;
+            }
+            return _context6.abrupt("return", res.json({
+              status: 'error',
+              message: 'User infos not found',
+              data: 'User infos not found'
+            }));
+          case 7:
             _req$body2 = req.body, productId = _req$body2.productId, method = _req$body2.method;
-            if (method) {
-              // pass method to middleware
-              if (method === 'add') {
-                userInfo.favoriteProducts.push(productId);
-              } else if (method === 'remove') {
-                userInfo.favoriteProducts = userInfo.favoriteProducts.filter(function (item) {
-                  return item !== productId;
-                });
-              }
+            console.log(productId, method);
+
+            // pass method to middleware
+            if (method === 'add') {
+              userInfo.favoriteProducts.push(productId);
+            } else if (method === 'remove') {
+              userInfo.favoriteProducts = userInfo.favoriteProducts.filter(function (item) {
+                return item.toString() !== productId;
+              });
+              console.log(userInfo.favoriteProducts);
             } else {
               // if not pass method to middleware,
               // update favoriteProducts with mehtod = toggle
               productExistIndex = userInfo.favoriteProducts.findIndex(function (item) {
-                return item === productId;
+                return item.toString() === productId;
               });
               if (productExistIndex === -1) {
                 userInfo.favoriteProducts.push(productId);
               } else {
                 userInfo.favoriteProducts = userInfo.favoriteProducts.filter(function (item) {
-                  return item !== productId;
+                  return item.toString() !== productId;
                 });
               }
             }
@@ -252,26 +301,26 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
               message: 'Update favorite products successfully',
               data: userInfo.favoriteProducts
             });
-            _context5.next = 12;
+            _context6.next = 13;
             return userInfo.save();
-          case 12:
-            _context5.next = 17;
+          case 13:
+            _context6.next = 18;
             break;
-          case 14:
-            _context5.prev = 14;
-            _context5.t0 = _context5["catch"](0);
+          case 15:
+            _context6.prev = 15;
+            _context6.t0 = _context6["catch"](0);
             res.send({
               status: 'error',
-              message: _context5.t0
+              message: _context6.t0
             });
-          case 17:
+          case 18:
           case "end":
-            return _context5.stop();
+            return _context6.stop();
         }
-      }, _callee5, null, [[0, 14]]);
+      }, _callee6, null, [[0, 15]]);
     }));
-    return function (_x11, _x12) {
-      return _ref5.apply(this, arguments);
+    return function (_x13, _x14) {
+      return _ref6.apply(this, arguments);
     };
   }());
 }); // getFavoriteProduct = async (req, res) => {};

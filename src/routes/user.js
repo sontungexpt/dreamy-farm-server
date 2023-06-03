@@ -16,6 +16,6 @@ router.post('/userInfos', userController.getUserInfos);
 
 router.post('/updateFavoriteProducts', userController.updateFavoriteProducts);
 
-// router.post('/getFavoriteProducts', userController.getFavoriteProducts);
+router.post('/getFavoriteProducts', userController.getFavoriteProducts);
 
 export default router;
