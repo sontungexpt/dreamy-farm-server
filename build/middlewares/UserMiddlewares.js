@@ -71,12 +71,13 @@ var checkUser = /*#__PURE__*/function () {
         case 0:
           _context2.prev = 0;
           if (res.locals._user) {
-            _context2.next = 15;
+            _context2.next = 16;
             break;
           }
           _req$body = req.body, email = _req$body.email, method = _req$body.method;
+          console.log(email);
           if (email) {
-            _context2.next = 5;
+            _context2.next = 6;
             break;
           }
           return _context2.abrupt("return", res.json({
@@ -84,54 +85,54 @@ var checkUser = /*#__PURE__*/function () {
             message: 'You need to login to use this feature',
             required: 'email'
           }));
-        case 5:
-          _context2.next = 7;
+        case 6:
+          _context2.next = 8;
           return _User["default"].findOne({
             email: email
           });
-        case 7:
+        case 8:
           user = _context2.sent;
           if (user) {
-            _context2.next = 12;
+            _context2.next = 13;
             break;
           }
           if (!(method === 'register')) {
-            _context2.next = 11;
+            _context2.next = 12;
             break;
           }
           return _context2.abrupt("return", next());
-        case 11:
+        case 12:
           return _context2.abrupt("return", res.json({
             status: 'error',
             message: 'User not found'
           }));
-        case 12:
+        case 13:
           if (!(user.status === 'blocked')) {
-            _context2.next = 14;
+            _context2.next = 15;
             break;
           }
           return _context2.abrupt("return", res.json({
             status: 'error',
             message: 'User are no longer authorized to access this account'
           }));
-        case 14:
-          res.locals._user = user;
         case 15:
+          res.locals._user = user;
+        case 16:
           next();
-          _context2.next = 21;
+          _context2.next = 22;
           break;
-        case 18:
-          _context2.prev = 18;
+        case 19:
+          _context2.prev = 19;
           _context2.t0 = _context2["catch"](0);
           res.json({
             status: 'error',
             message: _context2.t0
           });
-        case 21:
+        case 22:
         case "end":
           return _context2.stop();
       }
-    }, _callee2, null, [[0, 18]]);
+    }, _callee2, null, [[0, 19]]);
   }));
   return function checkUser(_x4, _x5, _x6) {
     return _ref2.apply(this, arguments);

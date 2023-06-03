@@ -2,6 +2,7 @@
 import bcrypt from 'bcrypt';
 // import nodemailer from 'nodemailer';
 
+import Feedback from '~/models/Feedback';
 import User from '~/models/User';
 import UserInfo from '~/models/UserInfo';
 
@@ -197,6 +198,39 @@ class UserController {
       await userInfo.save();
     } catch (error) {
       res.send({ status: 'error', message: error });
+    }
+  };
+
+  feedback = async (req, res) => {
+    try {
+      const user = res.locals._user;
+      const userInfo = await UserInfo.findOne({ email: user.email });
+
+      if (!userInfo) {
+        return res.json({
+          status: 'error',
+          message: 'User infos not found',
+          data: 'User infos not found',
+        });
+      }
+
+      const { content } = req.body;
+      if (!content) {
+        return res.json({
+          status: 'error',
+          message: 'Content is required',
+          required: 'content',
+        });
+      }
+
+      await Feedback.create({
+        user: userInfo._id,
+        content,
+      });
+
+      res.json({ status: 'success', message: 'Feedback successfully' });
+    } catch (err) {
+      res.json({ status: 'error', message: err });
     }
   };
 }

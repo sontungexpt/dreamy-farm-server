@@ -1,4 +1,5 @@
 import Product from '~/models/Product';
+
 class SiteController {
   index(req, res, next) {
     // .. some logic here .. like any other middleware

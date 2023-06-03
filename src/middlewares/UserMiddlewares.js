@@ -33,6 +33,7 @@ export const checkUser = async (req, res, next) => {
     // no token
     if (!res.locals._user) {
       const { email, method } = req.body;
+      console.log(email);
 
       if (!email) {
         return res.json({

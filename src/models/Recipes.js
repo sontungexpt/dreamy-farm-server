@@ -1,30 +1,24 @@
 import mongoose from 'mongoose';
 const Schema = mongoose.Schema;
 
-const ObjectId = Schema.ObjectId;
-
-const Recipes = new Schema(
+const Recipe = new Schema(
   {
-    order: { type: ObjectId, ref: 'Order', default: null },
     name: { type: String, default: '' },
     image: { type: String, default: '' },
-    category: { type: String, default: '' },
-    type: {
+    description: { type: String, default: '' },
+    totalTime: { type: String, default: '' },
+    steps: {
       type: Array,
       default: [
         {
-          name: '',
-          price: 0,
+          step: { type: String, default: '' },
         },
       ],
     },
-    description: { type: String, default: '' },
-    sold: { type: Number, default: 0 },
-    status: { type: String, default: 'active' },
   },
   {
     timestamps: true,
   },
 );
 
-export default mongoose.model('Recipes', Recipes);
+export default mongoose.model('Recipe', Recipe);

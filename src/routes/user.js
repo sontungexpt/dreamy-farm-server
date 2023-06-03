@@ -13,6 +13,7 @@ router.post('/login', userController.login);
 router.post('/userInfos', userController.getUserInfos);
 
 // router.post('/updateUserInfo', userController.updateUserInfo);
+router.post('/feedback', userController.feedback);
 
 router.post('/updateFavoriteProducts', userController.updateFavoriteProducts);
 
