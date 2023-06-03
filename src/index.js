@@ -11,6 +11,7 @@ import db from '~/configs/database';
 const app = express();
 const PORT = process.env.PORT || properties.PORT;
 
+app.use(express.static('public'));
 app.use(cors());
 app.use(morgan('combined'));
 app.use(bodyParser.json());

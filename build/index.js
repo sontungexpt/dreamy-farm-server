@@ -11,6 +11,7 @@ var _database = _interopRequireDefault(require("./configs/database"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 var app = (0, _express["default"])();
 var PORT = process.env.PORT || _configs["default"].PORT;
+app.use(_express["default"]["static"]('public'));
 app.use((0, _cors["default"])());
 app.use((0, _morgan["default"])('combined'));
 app.use(_bodyParser["default"].json());

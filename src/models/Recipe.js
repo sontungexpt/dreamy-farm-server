@@ -1,4 +1,7 @@
+var slug = require('mongoose-slug-updater');
 import mongoose from 'mongoose';
+
+mongoose.plugin(slug);
 const Schema = mongoose.Schema;
 
 const Recipe = new Schema(
@@ -15,10 +18,14 @@ const Recipe = new Schema(
         },
       ],
     },
+
+    slug: { type: String, slug: 'name', unique: true },
   },
   {
     timestamps: true,
   },
 );
+
+Recipe.index({ name: 'slug' });
 
 export default mongoose.model('Recipe', Recipe);
