@@ -10,6 +10,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 var router = _express["default"].Router();
 var recipeController = new _RecipeController["default"]();
 router.post('/add', recipeController.addRecipe);
+router.get('/detail/:slug', recipeController.show);
 router.get('/', recipeController.getRecipes);
 var _default = router;
 exports["default"] = _default;

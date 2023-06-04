@@ -10,13 +10,13 @@ const Recipe = new Schema(
     image: { type: String, default: '' },
     description: { type: String, default: '' },
     totalTime: { type: String, default: '' },
+    ingredients: {
+      type: Array,
+      default: [{ type: String, default: '' }],
+    },
     steps: {
       type: Array,
-      default: [
-        {
-          step: { type: String, default: '' },
-        },
-      ],
+      default: [{ type: String, default: '' }],
     },
 
     slug: { type: String, slug: 'name', unique: true },

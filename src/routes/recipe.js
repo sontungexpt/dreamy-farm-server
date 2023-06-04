@@ -6,6 +6,8 @@ const recipeController = new RecipeController();
 
 router.post('/add', recipeController.addRecipe);
 
+router.get('/detail/:slug', recipeController.show);
+
 router.get('/', recipeController.getRecipes);
 
 export default router;

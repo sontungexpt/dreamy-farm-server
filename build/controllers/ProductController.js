@@ -95,45 +95,56 @@ var ProductController = /*#__PURE__*/_createClass(function ProductController() {
   }());
   _defineProperty(this, "show", /*#__PURE__*/function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
-      var product;
+      var slug, product;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
           case 0:
             _context3.prev = 0;
-            _context3.next = 3;
+            slug = req.params.slug;
+            if (slug) {
+              _context3.next = 4;
+              break;
+            }
+            return _context3.abrupt("return", res.status(404).json({
+              status: 'error',
+              message: 'Slug is not found',
+              required: 'slug'
+            }));
+          case 4:
+            _context3.next = 6;
             return _Product["default"].findOne({
-              slug: req.params.slug
+              slug: slug
             });
-          case 3:
+          case 6:
             product = _context3.sent;
             if (product) {
-              _context3.next = 6;
+              _context3.next = 9;
               break;
             }
             return _context3.abrupt("return", res.status(404).json({
               status: 'error',
               message: 'Product not found'
             }));
-          case 6:
+          case 9:
             res.json({
               status: 'success',
               message: 'Product found',
               data: product
             });
-            _context3.next = 12;
+            _context3.next = 15;
             break;
-          case 9:
-            _context3.prev = 9;
+          case 12:
+            _context3.prev = 12;
             _context3.t0 = _context3["catch"](0);
             res.status(404).json({
               status: 'error',
               message: _context3.t0
             });
-          case 12:
+          case 15:
           case "end":
             return _context3.stop();
         }
-      }, _callee3, null, [[0, 9]]);
+      }, _callee3, null, [[0, 12]]);
     }));
     return function (_x5, _x6) {
       return _ref3.apply(this, arguments);

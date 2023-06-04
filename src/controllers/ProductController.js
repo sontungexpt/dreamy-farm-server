@@ -38,7 +38,17 @@ class ProductController {
 
   show = async (req, res) => {
     try {
-      const product = await Product.findOne({ slug: req.params.slug });
+      const { slug } = req.params;
+
+      if (!slug) {
+        return res.status(404).json({
+          status: 'error',
+          message: 'Slug is not found',
+          required: 'slug',
+        });
+      }
+
+      const product = await Product.findOne({ slug });
       if (!product) {
         return res
           .status(404)

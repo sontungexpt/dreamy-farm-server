@@ -107,6 +107,63 @@ var RecipeController = /*#__PURE__*/_createClass(function RecipeController() {
       return _ref2.apply(this, arguments);
     };
   }());
+  _defineProperty(this, "show", /*#__PURE__*/function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
+      var slug, recipe;
+      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            slug = req.params.slug;
+            if (slug) {
+              _context3.next = 4;
+              break;
+            }
+            return _context3.abrupt("return", res.status(404).json({
+              status: 'error',
+              message: 'Slug is not found',
+              required: 'slug'
+            }));
+          case 4:
+            _context3.next = 6;
+            return _Recipe["default"].findOne({
+              slug: slug
+            });
+          case 6:
+            recipe = _context3.sent;
+            if (recipe) {
+              _context3.next = 9;
+              break;
+            }
+            return _context3.abrupt("return", res.status(404).json({
+              status: 'error',
+              message: 'Recipe not found'
+            }));
+          case 9:
+            res.json({
+              status: 'success',
+              message: 'Recipe found',
+              data: recipe
+            });
+            _context3.next = 15;
+            break;
+          case 12:
+            _context3.prev = 12;
+            _context3.t0 = _context3["catch"](0);
+            res.status(404).json({
+              status: 'error',
+              message: _context3.t0
+            });
+          case 15:
+          case "end":
+            return _context3.stop();
+        }
+      }, _callee3, null, [[0, 12]]);
+    }));
+    return function (_x5, _x6) {
+      return _ref3.apply(this, arguments);
+    };
+  }());
 });
 var _default = RecipeController;
 exports["default"] = _default;

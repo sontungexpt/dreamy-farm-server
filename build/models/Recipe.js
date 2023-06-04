@@ -26,13 +26,18 @@ var Recipe = new Schema({
     type: String,
     "default": ''
   },
+  ingredients: {
+    type: Array,
+    "default": [{
+      type: String,
+      "default": ''
+    }]
+  },
   steps: {
     type: Array,
     "default": [{
-      step: {
-        type: String,
-        "default": ''
-      }
+      type: String,
+      "default": ''
     }]
   },
   slug: {
@@ -42,6 +47,9 @@ var Recipe = new Schema({
   }
 }, {
   timestamps: true
+});
+Recipe.index({
+  name: 'slug'
 });
 var _default = _mongoose["default"].model('Recipe', Recipe);
 exports["default"] = _default;

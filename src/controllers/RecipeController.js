@@ -43,6 +43,32 @@ class RecipeController {
       res.status(404).json({ status: 'error', message: err });
     }
   };
+
+  show = async (req, res) => {
+    try {
+      const { slug } = req.params;
+
+      if (!slug) {
+        return res.status(404).json({
+          status: 'error',
+          message: 'Slug is not found',
+          required: 'slug',
+        });
+      }
+
+      const recipe = await Recipe.findOne({ slug });
+
+      if (!recipe) {
+        return res
+          .status(404)
+          .json({ status: 'error', message: 'Recipe not found' });
+      }
+
+      res.json({ status: 'success', message: 'Recipe found', data: recipe });
+    } catch (err) {
+      res.status(404).json({ status: 'error', message: err });
+    }
+  };
 }
 
 export default RecipeController;
