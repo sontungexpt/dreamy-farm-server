@@ -9,7 +9,10 @@ const Recipe = new Schema(
     name: { type: String, default: '' },
     image: { type: String, default: '' },
     description: { type: String, default: '' },
+
+    // the total time to make the dish
     totalTime: { type: String, default: '' },
+
     ingredients: {
       type: Array,
       default: [{ type: String, default: '' }],

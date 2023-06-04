@@ -26,10 +26,12 @@ var Order = new Schema({
     type: String,
     "default": 'pending'
   },
+  // the list of products in order
   products: [{
     type: ObjectId,
     ref: 'Product'
   }],
+  // info of user
   price: {
     type: Number,
     "default": 0

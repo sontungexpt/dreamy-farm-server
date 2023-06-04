@@ -8,6 +8,7 @@ var _bcrypt = _interopRequireDefault(require("bcrypt"));
 var _Feedback = _interopRequireDefault(require("../models/Feedback"));
 var _User = _interopRequireDefault(require("../models/User"));
 var _UserInfo = _interopRequireDefault(require("../models/UserInfo"));
+var _Order = _interopRequireDefault(require("../models/Order"));
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 var _configs = _interopRequireDefault(require("../configs"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -38,7 +39,7 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
     };
   }());
   _defineProperty(this, "register", /*#__PURE__*/function () {
-    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res, next) {
+    var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
       var _req$body, name, email, password, encryptedPassword, oldUser;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
@@ -50,7 +51,7 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
           case 4:
             encryptedPassword = _context2.sent;
             // check if email is existed
-            oldUser = res.locals._user; // const oldUser = await User.findOne({ email });
+            oldUser = res.locals._user;
             if (!oldUser) {
               _context2.next = 8;
               break;
@@ -89,12 +90,12 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
         }
       }, _callee2, null, [[0, 15]]);
     }));
-    return function (_x3, _x4, _x5) {
+    return function (_x3, _x4) {
       return _ref2.apply(this, arguments);
     };
   }());
   _defineProperty(this, "login", /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res, next) {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
       var user, password, token;
       return _regeneratorRuntime().wrap(function _callee3$(_context3) {
         while (1) switch (_context3.prev = _context3.next) {
@@ -148,55 +149,36 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
         }
       }, _callee3, null, [[0, 15]]);
     }));
-    return function (_x6, _x7, _x8) {
+    return function (_x5, _x6) {
       return _ref3.apply(this, arguments);
     };
   }());
   _defineProperty(this, "getUserInfos", /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
-      var user, userInfo;
+      var userInfo;
       return _regeneratorRuntime().wrap(function _callee4$(_context4) {
         while (1) switch (_context4.prev = _context4.next) {
           case 0:
-            _context4.prev = 0;
-            user = res.locals._user;
-            _context4.next = 4;
-            return _UserInfo["default"].findOne({
-              email: user.email
-            });
-          case 4:
-            userInfo = _context4.sent;
-            if (userInfo) {
-              _context4.next = 7;
-              break;
+            try {
+              userInfo = res.locals._userInfo;
+              res.json({
+                status: 'success',
+                message: 'Get user data successfully',
+                data: userInfo
+              });
+            } catch (error) {
+              res.send({
+                status: 'error',
+                message: error
+              });
             }
-            return _context4.abrupt("return", res.json({
-              status: 'error',
-              message: 'User infos not found',
-              data: 'User infos not found'
-            }));
-          case 7:
-            res.json({
-              status: 'success',
-              message: 'Get user data successfully',
-              data: userInfo
-            });
-            _context4.next = 13;
-            break;
-          case 10:
-            _context4.prev = 10;
-            _context4.t0 = _context4["catch"](0);
-            res.send({
-              status: 'error',
-              message: _context4.t0
-            });
-          case 13:
+          case 1:
           case "end":
             return _context4.stop();
         }
-      }, _callee4, null, [[0, 10]]);
+      }, _callee4);
     }));
-    return function (_x9, _x10) {
+    return function (_x7, _x8) {
       return _ref4.apply(this, arguments);
     };
   }());
@@ -244,41 +226,27 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
         }
       }, _callee5, null, [[0, 10]]);
     }));
-    return function (_x11, _x12) {
+    return function (_x9, _x10) {
       return _ref5.apply(this, arguments);
     };
   }());
   _defineProperty(this, "updateFavoriteProducts", /*#__PURE__*/function () {
     var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
-      var user, userInfo, _req$body2, productId, method, productExistIndex;
+      var userInfo, _req$body2, productId, method, productExistIndex;
       return _regeneratorRuntime().wrap(function _callee6$(_context6) {
         while (1) switch (_context6.prev = _context6.next) {
           case 0:
             _context6.prev = 0;
-            user = res.locals._user;
-            _context6.next = 4;
-            return _UserInfo["default"].findOne({
-              email: user.email
-            });
-          case 4:
-            userInfo = _context6.sent;
-            if (userInfo) {
-              _context6.next = 7;
-              break;
-            }
-            return _context6.abrupt("return", res.json({
-              status: 'error',
-              message: 'User infos not found',
-              data: 'User infos not found'
-            }));
-          case 7:
+            userInfo = res.locals._userInfo;
             _req$body2 = req.body, productId = _req$body2.productId, method = _req$body2.method; // pass method to middleware
-            if (method === 'add') {
-              userInfo.favoriteProducts.push(productId);
-            } else if (method === 'remove') {
-              userInfo.favoriteProducts = userInfo.favoriteProducts.filter(function (item) {
-                return item.toString() !== productId;
-              });
+            if (method) {
+              if (method === 'add') {
+                userInfo.favoriteProducts.push(productId);
+              } else if (method === 'remove') {
+                userInfo.favoriteProducts = userInfo.favoriteProducts.filter(function (item) {
+                  return item.toString() !== productId;
+                });
+              }
             } else {
               // if not pass method to middleware,
               // update favoriteProducts with mehtod = toggle
@@ -298,55 +266,39 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
               message: 'Update favorite products successfully',
               data: userInfo.favoriteProducts
             });
-            _context6.next = 12;
+            _context6.next = 7;
             return userInfo.save();
-          case 12:
-            _context6.next = 17;
+          case 7:
+            _context6.next = 12;
             break;
-          case 14:
-            _context6.prev = 14;
+          case 9:
+            _context6.prev = 9;
             _context6.t0 = _context6["catch"](0);
             res.send({
               status: 'error',
               message: _context6.t0
             });
-          case 17:
+          case 12:
           case "end":
             return _context6.stop();
         }
-      }, _callee6, null, [[0, 14]]);
+      }, _callee6, null, [[0, 9]]);
     }));
-    return function (_x13, _x14) {
+    return function (_x11, _x12) {
       return _ref6.apply(this, arguments);
     };
   }());
   _defineProperty(this, "feedback", /*#__PURE__*/function () {
     var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
-      var user, userInfo, content;
+      var userInfo, content;
       return _regeneratorRuntime().wrap(function _callee7$(_context7) {
         while (1) switch (_context7.prev = _context7.next) {
           case 0:
             _context7.prev = 0;
-            user = res.locals._user;
-            _context7.next = 4;
-            return _UserInfo["default"].findOne({
-              email: user.email
-            });
-          case 4:
-            userInfo = _context7.sent;
-            if (userInfo) {
-              _context7.next = 7;
-              break;
-            }
-            return _context7.abrupt("return", res.json({
-              status: 'error',
-              message: 'User infos not found',
-              data: 'User infos not found'
-            }));
-          case 7:
+            userInfo = res.locals._userInfo;
             content = req.body.content;
             if (content) {
-              _context7.next = 10;
+              _context7.next = 5;
               break;
             }
             return _context7.abrupt("return", res.json({
@@ -354,36 +306,121 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
               message: 'Content is required',
               required: 'content'
             }));
-          case 10:
-            _context7.next = 12;
+          case 5:
+            _context7.next = 7;
             return _Feedback["default"].create({
               user: userInfo._id,
               content: content
             });
-          case 12:
+          case 7:
             res.json({
               status: 'success',
               message: 'Feedback successfully'
             });
-            _context7.next = 18;
+            _context7.next = 13;
             break;
-          case 15:
-            _context7.prev = 15;
+          case 10:
+            _context7.prev = 10;
             _context7.t0 = _context7["catch"](0);
             res.json({
               status: 'error',
               message: _context7.t0
             });
-          case 18:
+          case 13:
           case "end":
             return _context7.stop();
         }
-      }, _callee7, null, [[0, 15]]);
+      }, _callee7, null, [[0, 10]]);
     }));
-    return function (_x15, _x16) {
+    return function (_x13, _x14) {
       return _ref7.apply(this, arguments);
     };
   }());
-}); // getFavoriteProduct = async (req, res) => {};
+  _defineProperty(this, "updateProfile", /*#__PURE__*/function () {
+    var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
+      var userInfo, _req$body3, name, address;
+      return _regeneratorRuntime().wrap(function _callee8$(_context8) {
+        while (1) switch (_context8.prev = _context8.next) {
+          case 0:
+            _context8.prev = 0;
+            userInfo = res.locals._userInfo;
+            _req$body3 = req.body, name = _req$body3.name, address = _req$body3.address;
+            if (name) userInfo.name = name;
+            if (address) userInfo.address = address;
+            _context8.next = 7;
+            return userInfo.save();
+          case 7:
+            res.json({
+              status: 'success',
+              message: 'Update profile successfully'
+            });
+            _context8.next = 13;
+            break;
+          case 10:
+            _context8.prev = 10;
+            _context8.t0 = _context8["catch"](0);
+            res.send({
+              status: 'error',
+              message: _context8.t0
+            });
+          case 13:
+          case "end":
+            return _context8.stop();
+        }
+      }, _callee8, null, [[0, 10]]);
+    }));
+    return function (_x15, _x16) {
+      return _ref8.apply(this, arguments);
+    };
+  }());
+  _defineProperty(this, "getOrders", /*#__PURE__*/function () {
+    var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(req, res) {
+      var userInfo, orders;
+      return _regeneratorRuntime().wrap(function _callee9$(_context9) {
+        while (1) switch (_context9.prev = _context9.next) {
+          case 0:
+            _context9.prev = 0;
+            userInfo = res.locals._userInfo;
+            _context9.next = 4;
+            return _Order["default"].find({
+              user: userInfo._id
+            });
+          case 4:
+            orders = _context9.sent;
+            if (orders) {
+              _context9.next = 7;
+              break;
+            }
+            return _context9.abrupt("return", res.json({
+              status: 'error',
+              message: 'Orders not found',
+              data: 'Orders not found'
+            }));
+          case 7:
+            res.json({
+              status: 'success',
+              message: 'Get orders successfully',
+              data: orders
+            });
+            _context9.next = 13;
+            break;
+          case 10:
+            _context9.prev = 10;
+            _context9.t0 = _context9["catch"](0);
+            res.send({
+              status: 'error',
+              message: _context9.t0
+            });
+          case 13:
+          case "end":
+            return _context9.stop();
+        }
+      }, _callee9, null, [[0, 10]]);
+    }));
+    return function (_x17, _x18) {
+      return _ref9.apply(this, arguments);
+    };
+  }());
+});
 var _default = UserController;
 exports["default"] = _default;

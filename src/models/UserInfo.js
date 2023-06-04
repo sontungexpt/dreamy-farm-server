@@ -4,35 +4,25 @@ const Schema = mongoose.Schema;
 const ObjectId = Schema.ObjectId;
 
 const UserInfo = new Schema({
-  // Authentication
   email: { type: String, unique: true, required: true, maxlength: 255 },
-  roles: [
-    {
-      type: ObjectId,
-      ref: 'Role',
-      default: ['user'],
-    },
-  ],
-
-  // Additional information
   fullName: { type: String, default: '' },
-
-  addreses: [
-    {
-      type: String,
-      default: '',
-    },
-  ],
-  addressActive: { type: Number, default: 0 },
-
-  phoneNumber: {
-    type: String,
+  addreses: {
+    type: Array,
     validate: {
-      validator: function (value) {
-        return /\d{3}-\d{3}-\d{4}/.test(value) || value === '';
+      validator: function (array) {
+        return array.every((v) => {
+          const addressValidated = typeof v.address === 'string';
+          const phoneNumberValidated =
+            /\d{3}-\d{3}-\d{4}/.test(v.phoneNumber) || v.phoneNumber === '';
+          const addressActiveValidated = typeof v.addressActive === 'number';
+          return (
+            addressValidated && phoneNumberValidated && addressActiveValidated
+          );
+        });
       },
-      message: (props) => `${props.value} is not a valid phone number!`,
+      message: (props) => `${props.array} is not a valid address`,
     },
+    default: [],
   },
   avatar: { type: String, default: '' },
   favoriteProducts: [{ type: ObjectId, ref: 'Product' }],

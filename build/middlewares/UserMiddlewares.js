@@ -4,8 +4,9 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.checkUser = exports.checkToken = void 0;
-var _User = _interopRequireDefault(require("../models/User.js"));
+exports.checkUserInfo = exports.checkUser = exports.checkToken = exports.checkIsUser = exports.checkIsModerator = exports.checkIsAdmin = void 0;
+var _User = _interopRequireDefault(require("../models/User"));
+var _UserInfo = _interopRequireDefault(require("../models/UserInfo"));
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 var _configs = _interopRequireDefault(require("../configs"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -71,13 +72,12 @@ var checkUser = /*#__PURE__*/function () {
         case 0:
           _context2.prev = 0;
           if (res.locals._user) {
-            _context2.next = 16;
+            _context2.next = 15;
             break;
           }
           _req$body = req.body, email = _req$body.email, method = _req$body.method;
-          console.log(email);
           if (email) {
-            _context2.next = 6;
+            _context2.next = 5;
             break;
           }
           return _context2.abrupt("return", res.json({
@@ -85,57 +85,177 @@ var checkUser = /*#__PURE__*/function () {
             message: 'You need to login to use this feature',
             required: 'email'
           }));
-        case 6:
-          _context2.next = 8;
+        case 5:
+          _context2.next = 7;
           return _User["default"].findOne({
             email: email
           });
-        case 8:
+        case 7:
           user = _context2.sent;
           if (user) {
-            _context2.next = 13;
-            break;
-          }
-          if (!(method === 'register')) {
             _context2.next = 12;
             break;
           }
+          if (!(method === 'register')) {
+            _context2.next = 11;
+            break;
+          }
           return _context2.abrupt("return", next());
-        case 12:
+        case 11:
           return _context2.abrupt("return", res.json({
             status: 'error',
             message: 'User not found'
           }));
-        case 13:
+        case 12:
           if (!(user.status === 'blocked')) {
-            _context2.next = 15;
+            _context2.next = 14;
             break;
           }
           return _context2.abrupt("return", res.json({
             status: 'error',
             message: 'User are no longer authorized to access this account'
           }));
-        case 15:
+        case 14:
           res.locals._user = user;
-        case 16:
+        case 15:
           next();
-          _context2.next = 22;
+          _context2.next = 21;
           break;
-        case 19:
-          _context2.prev = 19;
+        case 18:
+          _context2.prev = 18;
           _context2.t0 = _context2["catch"](0);
           res.json({
             status: 'error',
             message: _context2.t0
           });
-        case 22:
+        case 21:
         case "end":
           return _context2.stop();
       }
-    }, _callee2, null, [[0, 19]]);
+    }, _callee2, null, [[0, 18]]);
   }));
   return function checkUser(_x4, _x5, _x6) {
     return _ref2.apply(this, arguments);
   };
 }();
 exports.checkUser = checkUser;
+var hasRole = function hasRole(roles, role) {
+  if (!roles || !role) {
+    return false;
+  }
+  return roles.includes(role);
+};
+var checkRole = function checkRole(req, res, next, role) {
+  try {
+    var user = res.locals._user;
+    if (!hasRole(user === null || user === void 0 ? void 0 : user.roles, role)) {
+      return res.json({
+        status: 'error',
+        message: 'You are not authorized to access this account'
+      });
+    }
+    return next();
+  } catch (error) {
+    return res.json({
+      status: 'error',
+      message: error
+    });
+  }
+};
+var checkIsUser = /*#__PURE__*/function () {
+  var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res, next) {
+    return _regeneratorRuntime().wrap(function _callee3$(_context3) {
+      while (1) switch (_context3.prev = _context3.next) {
+        case 0:
+          return _context3.abrupt("return", checkRole(req, res, next, 'user'));
+        case 1:
+        case "end":
+          return _context3.stop();
+      }
+    }, _callee3);
+  }));
+  return function checkIsUser(_x7, _x8, _x9) {
+    return _ref3.apply(this, arguments);
+  };
+}();
+exports.checkIsUser = checkIsUser;
+var checkIsAdmin = /*#__PURE__*/function () {
+  var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res, next) {
+    return _regeneratorRuntime().wrap(function _callee4$(_context4) {
+      while (1) switch (_context4.prev = _context4.next) {
+        case 0:
+          return _context4.abrupt("return", checkRole(req, res, next, 'admin'));
+        case 1:
+        case "end":
+          return _context4.stop();
+      }
+    }, _callee4);
+  }));
+  return function checkIsAdmin(_x10, _x11, _x12) {
+    return _ref4.apply(this, arguments);
+  };
+}();
+exports.checkIsAdmin = checkIsAdmin;
+var checkIsModerator = /*#__PURE__*/function () {
+  var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res, next) {
+    return _regeneratorRuntime().wrap(function _callee5$(_context5) {
+      while (1) switch (_context5.prev = _context5.next) {
+        case 0:
+          return _context5.abrupt("return", checkRole(req, res, next, 'moderator'));
+        case 1:
+        case "end":
+          return _context5.stop();
+      }
+    }, _callee5);
+  }));
+  return function checkIsModerator(_x13, _x14, _x15) {
+    return _ref5.apply(this, arguments);
+  };
+}();
+exports.checkIsModerator = checkIsModerator;
+var checkUserInfo = /*#__PURE__*/function () {
+  var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res, next) {
+    var user, userInfo;
+    return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+      while (1) switch (_context6.prev = _context6.next) {
+        case 0:
+          _context6.prev = 0;
+          user = res.locals._user;
+          _context6.next = 4;
+          return _UserInfo["default"].findOne({
+            email: user.email
+          });
+        case 4:
+          userInfo = _context6.sent;
+          if (userInfo) {
+            _context6.next = 7;
+            break;
+          }
+          return _context6.abrupt("return", res.json({
+            status: 'error',
+            message: 'User infos not found',
+            data: 'User infos not found'
+          }));
+        case 7:
+          res.locals._userInfo = userInfo;
+          next();
+          _context6.next = 14;
+          break;
+        case 11:
+          _context6.prev = 11;
+          _context6.t0 = _context6["catch"](0);
+          res.json({
+            status: 'error',
+            message: _context6.t0
+          });
+        case 14:
+        case "end":
+          return _context6.stop();
+      }
+    }, _callee6, null, [[0, 11]]);
+  }));
+  return function checkUserInfo(_x16, _x17, _x18) {
+    return _ref6.apply(this, arguments);
+  };
+}();
+exports.checkUserInfo = checkUserInfo;

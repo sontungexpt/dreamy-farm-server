@@ -9,10 +9,12 @@ const ObjectId = Schema.ObjectId;
 
 const Product = new Schema(
   {
-    order: { type: ObjectId, ref: 'Order', default: null },
-    name: { type: String, default: '' },
+    order: [{ type: ObjectId, ref: 'Order', default: null }],
+    name: { type: String, reuired: true },
     image: { type: String, default: '' },
-    category: { type: String, default: '' },
+
+    category: { type: String, required: true },
+
     type: {
       type: Array,
       default: [
@@ -21,10 +23,19 @@ const Product = new Schema(
           price: 0,
         },
       ],
+      required: true,
     },
-    description: { type: String, default: '' },
+
+    // the number of products sold
     sold: { type: Number, default: 0 },
-    status: { type: String, default: 'active' },
+
+    // the number of products in stock
+    inventory: { type: Number, default: 0 },
+
+    // status: stock, out-of-stock, incoming
+    status: { type: String, default: 'stock' },
+
+    description: { type: String, default: '' },
     slug: { type: String, slug: 'name', unique: true },
   },
   {

@@ -1,11 +1,18 @@
 import mongoose from 'mongoose';
 
 const Schema = mongoose.Schema;
+// const ObjectId = Schema.ObjectId;
 
 const User = new Schema(
   {
-    email: { type: String, default: '' },
-    password: { type: String, default: '' },
+    email: { type: String, default: '', required: true, maxlength: 255 },
+    password: { type: String, default: '', required: true, maxlength: 255 },
+    roles: {
+      type: [String],
+      default: ['user'],
+    },
+
+    // active, blocked, deleted
     status: { type: String, default: 'active' },
     deletedAt: { type: Date, default: null },
   },

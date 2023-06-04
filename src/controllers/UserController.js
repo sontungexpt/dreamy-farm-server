@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt';
 import Feedback from '~/models/Feedback';
 import User from '~/models/User';
 import UserInfo from '~/models/UserInfo';
+import Order from '~/models/Order';
 
 import jwt from 'jsonwebtoken';
 import properties from '~/configs';
@@ -50,14 +51,13 @@ class UserController {
     // } catch (error) {}
   };
 
-  register = async (req, res, next) => {
+  register = async (req, res) => {
     try {
       const { name, email, password } = req.body;
       const encryptedPassword = await bcrypt.hash(password, 10);
 
       // check if email is existed
       const oldUser = res.locals._user;
-      // const oldUser = await User.findOne({ email });
       if (oldUser) {
         return res.json({ status: 'error', message: 'Email is existed' });
       }
@@ -78,7 +78,7 @@ class UserController {
     }
   };
 
-  login = async (req, res, next) => {
+  login = async (req, res) => {
     try {
       const user = res.locals._user;
       const { password } = req.body;
@@ -108,14 +108,7 @@ class UserController {
 
   getUserInfos = async (req, res) => {
     try {
-      const user = res.locals._user;
-      const userInfo = await UserInfo.findOne({ email: user.email });
-      if (!userInfo)
-        return res.json({
-          status: 'error',
-          message: 'User infos not found',
-          data: 'User infos not found',
-        });
+      const userInfo = res.locals._userInfo;
 
       res.json({
         status: 'success',
@@ -154,26 +147,19 @@ class UserController {
 
   updateFavoriteProducts = async (req, res) => {
     try {
-      const user = res.locals._user;
-      const userInfo = await UserInfo.findOne({ email: user.email });
-
-      if (!userInfo) {
-        return res.json({
-          status: 'error',
-          message: 'User infos not found',
-          data: 'User infos not found',
-        });
-      }
+      const userInfo = res.locals._userInfo;
 
       const { productId, method } = req.body;
 
       // pass method to middleware
-      if (method === 'add') {
-        userInfo.favoriteProducts.push(productId);
-      } else if (method === 'remove') {
-        userInfo.favoriteProducts = userInfo.favoriteProducts.filter(
-          (item) => item.toString() !== productId,
-        );
+      if (method) {
+        if (method === 'add') {
+          userInfo.favoriteProducts.push(productId);
+        } else if (method === 'remove') {
+          userInfo.favoriteProducts = userInfo.favoriteProducts.filter(
+            (item) => item.toString() !== productId,
+          );
+        }
       } else {
         // if not pass method to middleware,
         // update favoriteProducts with mehtod = toggle
@@ -203,16 +189,7 @@ class UserController {
 
   feedback = async (req, res) => {
     try {
-      const user = res.locals._user;
-      const userInfo = await UserInfo.findOne({ email: user.email });
-
-      if (!userInfo) {
-        return res.json({
-          status: 'error',
-          message: 'User infos not found',
-          data: 'User infos not found',
-        });
-      }
+      const userInfo = res.locals._userInfo;
 
       const { content } = req.body;
       if (!content) {
@@ -233,8 +210,45 @@ class UserController {
       res.json({ status: 'error', message: err });
     }
   };
-}
 
-// getFavoriteProduct = async (req, res) => {};
+  updateProfile = async (req, res) => {
+    try {
+      const userInfo = res.locals._userInfo;
+
+      const { name, address } = req.body;
+      if (name) userInfo.name = name;
+      if (address) userInfo.address = address;
+
+      await userInfo.save();
+
+      res.json({ status: 'success', message: 'Update profile successfully' });
+    } catch (error) {
+      res.send({ status: 'error', message: error });
+    }
+  };
+
+  getOrders = async (req, res) => {
+    try {
+      const userInfo = res.locals._userInfo;
+      const orders = await Order.find({ user: userInfo._id });
+
+      if (!orders) {
+        return res.json({
+          status: 'error',
+          message: 'Orders not found',
+          data: 'Orders not found',
+        });
+      }
+
+      res.json({
+        status: 'success',
+        message: 'Get orders successfully',
+        data: orders,
+      });
+    } catch (error) {
+      res.send({ status: 'error', message: error });
+    }
+  };
+}
 
 export default UserController;

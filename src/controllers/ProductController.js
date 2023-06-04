@@ -1,9 +1,18 @@
 import Product from '~/models/Product';
+import checkParams from '~/utils/checkParams';
 
 class ProductController {
   getProductAtCategory = async (req, res) => {
     try {
-      const products = await Product.find({ category: req.params.category });
+      let findStatus = 'stock';
+      const { status, category } = req.params;
+      checkParams(req.params, 'category');
+
+      if (status) {
+        findStatus = status;
+      }
+
+      const products = await Product.find({ category, status: findStatus });
       res.json({ status: 'success', data: products });
     } catch (err) {
       res.status(404).json({ status: 'error', message: err });

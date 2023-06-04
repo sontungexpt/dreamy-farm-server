@@ -11,7 +11,11 @@ const Order = new Schema(
     // info of order
     paymentMethod: { type: String, default: 'cash' },
     paymentStatus: { type: String, default: 'pending' },
+
+    // the list of products in order
     products: [{ type: ObjectId, ref: 'Product' }],
+
+    // info of user
     price: { type: Number, default: 0 },
     address: { type: String, default: '' },
     phoneNumber: { type: String, default: '' },

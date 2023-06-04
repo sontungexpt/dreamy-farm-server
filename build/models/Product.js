@@ -11,14 +11,14 @@ _mongoose["default"].plugin(slug);
 var Schema = _mongoose["default"].Schema;
 var ObjectId = Schema.ObjectId;
 var Product = new Schema({
-  order: {
+  order: [{
     type: ObjectId,
     ref: 'Order',
     "default": null
-  },
+  }],
   name: {
     type: String,
-    "default": ''
+    reuired: true
   },
   image: {
     type: String,
@@ -26,26 +26,34 @@ var Product = new Schema({
   },
   category: {
     type: String,
-    "default": ''
+    required: true
   },
   type: {
     type: Array,
     "default": [{
       name: '',
       price: 0
-    }]
+    }],
+    required: true
   },
-  description: {
-    type: String,
-    "default": ''
-  },
+  // the number of products sold
   sold: {
     type: Number,
     "default": 0
   },
+  // the number of products in stock
+  inventory: {
+    type: Number,
+    "default": 0
+  },
+  // status: stock, out-of-stock, incoming
   status: {
     type: String,
-    "default": 'active'
+    "default": 'stock'
+  },
+  description: {
+    type: String,
+    "default": ''
   },
   slug: {
     type: String,

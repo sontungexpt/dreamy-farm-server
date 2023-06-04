@@ -9,41 +9,32 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 var Schema = _mongoose["default"].Schema;
 var ObjectId = Schema.ObjectId;
 var UserInfo = new Schema({
-  // Authentication
   email: {
     type: String,
     unique: true,
     required: true,
     maxlength: 255
   },
-  roles: [{
-    type: ObjectId,
-    ref: 'Role',
-    "default": ['user']
-  }],
-  // Additional information
   fullName: {
     type: String,
     "default": ''
   },
-  addreses: [{
-    type: String,
-    "default": ''
-  }],
-  addressActive: {
-    type: Number,
-    "default": 0
-  },
-  phoneNumber: {
-    type: String,
+  addreses: {
+    type: Array,
     validate: {
-      validator: function validator(value) {
-        return /\d{3}-\d{3}-\d{4}/.test(value) || value === '';
+      validator: function validator(array) {
+        return array.every(function (v) {
+          var addressValidated = typeof v.address === 'string';
+          var phoneNumberValidated = /\d{3}-\d{3}-\d{4}/.test(v.phoneNumber) || v.phoneNumber === '';
+          var addressActiveValidated = typeof v.addressActive === 'number';
+          return addressValidated && phoneNumberValidated && addressActiveValidated;
+        });
       },
       message: function message(props) {
-        return "".concat(props.value, " is not a valid phone number!");
+        return "".concat(props.array, " is not a valid address");
       }
-    }
+    },
+    "default": []
   },
   avatar: {
     type: String,
