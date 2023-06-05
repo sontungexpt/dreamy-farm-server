@@ -15,7 +15,9 @@ class ProductController {
       const products = await Product.find({ category, status: findStatus });
       res.json({ status: 'success', data: products });
     } catch (err) {
-      res.status(404).json({ status: 'error', message: err });
+      res
+        .status(404)
+        .json({ status: 'error', message: err.message, error: err });
     }
   };
 
@@ -65,7 +67,9 @@ class ProductController {
       }
       res.json({ status: 'success', message: 'Product found', data: product });
     } catch (err) {
-      res.status(404).json({ status: 'error', message: err });
+      res
+        .status(404)
+        .json({ status: 'error', message: err.message, error: err });
     }
   };
 }

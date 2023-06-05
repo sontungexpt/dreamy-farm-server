@@ -6,6 +6,7 @@ import Feedback from '~/models/Feedback';
 import User from '~/models/User';
 import UserInfo from '~/models/UserInfo';
 import Order from '~/models/Order';
+import checkParams from '~/utils/checkParams';
 
 import jwt from 'jsonwebtoken';
 import properties from '~/configs';
@@ -116,7 +117,7 @@ class UserController {
         data: userInfo,
       });
     } catch (error) {
-      res.send({ status: 'error', message: error });
+      res.send({ status: 'error', message: error.message, error: error });
     }
   };
 
@@ -141,7 +142,7 @@ class UserController {
         data: userInfo.favoriteProducts,
       });
     } catch (error) {
-      res.send({ status: 'error', message: error });
+      res.send({ status: 'error', message: error.message, error });
     }
   };
 
@@ -183,22 +184,17 @@ class UserController {
 
       await userInfo.save();
     } catch (error) {
-      res.send({ status: 'error', message: error });
+      res.json({ status: 'error', message: err.message, error: err });
     }
   };
 
+  //[POST] /user/feedback
   feedback = async (req, res) => {
     try {
       const userInfo = res.locals._userInfo;
 
       const { content } = req.body;
-      if (!content) {
-        return res.json({
-          status: 'error',
-          message: 'Content is required',
-          required: 'content',
-        });
-      }
+      checkParams(req.body, 'content');
 
       await Feedback.create({
         user: userInfo._id,
@@ -207,23 +203,28 @@ class UserController {
 
       res.json({ status: 'success', message: 'Feedback successfully' });
     } catch (err) {
-      res.json({ status: 'error', message: err });
+      res.json({ status: 'error', message: err.message, error: err });
     }
   };
 
+  // [PUT] /user/profile
   updateProfile = async (req, res) => {
     try {
       const userInfo = res.locals._userInfo;
 
-      const { name, address } = req.body;
+      const { name, sex } = req.body;
       if (name) userInfo.name = name;
-      if (address) userInfo.address = address;
+      if (sex) userInfo.sex = sex;
 
       await userInfo.save();
 
-      res.json({ status: 'success', message: 'Update profile successfully' });
+      res.json({
+        status: 'success',
+        message: 'Update profile successfully',
+        data: userInfo,
+      });
     } catch (error) {
-      res.send({ status: 'error', message: error });
+      res.send({ status: 'error', message: error.message, error: error });
     }
   };
 
@@ -246,7 +247,7 @@ class UserController {
         data: orders,
       });
     } catch (error) {
-      res.send({ status: 'error', message: error });
+      res.send({ status: 'error', message: error.message, error: error });
     }
   };
 }

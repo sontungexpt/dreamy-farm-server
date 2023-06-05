@@ -13,6 +13,7 @@ const middlewares = {
   '/updateFavoriteProducts': [checkIsUser, checkUserInfo],
   '/getOrders': [checkIsUser, checkUserInfo],
   '/getFavoriteProducts': [checkIsUser],
+  '/updateProfile': [checkIsUser, checkUserInfo],
 };
 
 useMiddlewares(router, middlewares);
@@ -30,6 +31,8 @@ router.post('/feedback', userController.feedback);
 router.post('/updateFavoriteProducts', userController.updateFavoriteProducts);
 
 router.post('/getFavoriteProducts', userController.getFavoriteProducts);
+
+router.put('/updateProfile', userController.updateProfile);
 
 router.get('/getOrders', userController.getOrders);
 

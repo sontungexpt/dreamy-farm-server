@@ -5,7 +5,8 @@ const ObjectId = Schema.ObjectId;
 
 const UserInfo = new Schema({
   email: { type: String, unique: true, required: true, maxlength: 255 },
-  fullName: { type: String, default: '' },
+  name: { type: String, required: true, maxlength: 255 },
+  sex: { type: String, default: '', maxlength: 255 },
   addreses: {
     type: Array,
     validate: {
@@ -14,7 +15,7 @@ const UserInfo = new Schema({
           const addressValidated = typeof v.address === 'string';
           const phoneNumberValidated =
             /\d{3}-\d{3}-\d{4}/.test(v.phoneNumber) || v.phoneNumber === '';
-          const addressActiveValidated = typeof v.addressActive === 'number';
+          const addressActiveValidated = typeof v.active === 'number';
           return (
             addressValidated && phoneNumberValidated && addressActiveValidated
           );
