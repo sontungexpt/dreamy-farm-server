@@ -7,6 +7,6 @@ const siteController = new SiteController();
 
 router.get('/', siteController.index);
 
-router.get('/products/search', siteController.search);
+router.get('/search', siteController.search);
 
 export default router;

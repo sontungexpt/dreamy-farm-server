@@ -9,22 +9,18 @@ class SiteController {
 
   search = async (req, res) => {
     try {
-      const { name, type } = req.query;
-      console.log(req.query);
-      console.log(req.params);
+      const { q, type } = req.query;
 
-      const nameTrim = name.trim();
+      const nameTrim = q.trim();
 
       const products = await Product.find({
-        name: {
-          $regex: nameTrim,
-          $options: 'i',
-        },
+        name: { $regex: nameTrim, $options: 'i' },
       });
 
       if (products) {
         if (type === 'less') {
-          products = products.splice(0, 5);
+          // get 5 first in products
+          products = products.slice(0, 5);
         }
         res.json({
           status: 'success',
@@ -33,7 +29,7 @@ class SiteController {
         });
       }
 
-      res.status(404).json({ status: 'error', message: 'Product not found' });
+      res.json({ status: 'error', message: 'Product not found' });
     } catch (err) {
       res
         .status(404)
