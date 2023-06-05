@@ -28,12 +28,10 @@ router.post('/userInfos', userController.getUserInfos);
 
 router.post('/feedback', userController.feedback);
 
-router.post('/updateFavoriteProducts', userController.updateFavoriteProducts);
+router.put('/updateFavoriteProducts', userController.updateFavoriteProducts);
 
 router.post('/getFavoriteProducts', userController.getFavoriteProducts);
 
 router.put('/updateProfile', userController.updateProfile);
-
-router.get('/getOrders', userController.getOrders);
 
 export default router;

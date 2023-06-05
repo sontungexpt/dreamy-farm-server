@@ -7,6 +7,7 @@ import cors from 'cors';
 import properties from '~/configs';
 import route from '~/routes';
 import db from '~/configs/database';
+import initialProducts from '~/utils/initialProducts';
 
 const app = express();
 const PORT = process.env.PORT || properties.PORT;
@@ -19,6 +20,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(methodOverride('_method'));
 
 db.connect();
+
+initialProducts();
 
 route(app);
 

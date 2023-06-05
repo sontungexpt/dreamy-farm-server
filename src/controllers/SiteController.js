@@ -10,17 +10,34 @@ class SiteController {
   search = async (req, res) => {
     try {
       const { name, type } = req.query;
-      const products = await Product.find({ name });
+      console.log(req.query);
+      console.log(req.params);
+
+      const nameTrim = name.trim();
+
+      const products = await Product.find({
+        name: {
+          $regex: nameTrim,
+          $options: 'i',
+        },
+      });
+
       if (products) {
         if (type === 'less') {
           products = products.splice(0, 5);
         }
-        products = products.splice(0, 10);
-        res.json({ status: 'success', data: products });
+        res.json({
+          status: 'success',
+          message: 'Search success',
+          data: products,
+        });
       }
+
       res.status(404).json({ status: 'error', message: 'Product not found' });
     } catch (err) {
-      res.status(404).json({ status: 'error', message: err });
+      res
+        .status(404)
+        .json({ status: 'error', message: err.message, error: err });
     }
   };
 }

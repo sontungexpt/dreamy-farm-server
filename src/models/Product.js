@@ -10,12 +10,12 @@ const ObjectId = Schema.ObjectId;
 const Product = new Schema(
   {
     order: [{ type: ObjectId, ref: 'Order', default: null }],
-    name: { type: String, reuired: true },
+    name: { type: String, required: true },
     image: { type: String, default: '' },
 
     category: { type: String, required: true },
 
-    type: {
+    types: {
       type: Array,
       default: [
         {
@@ -23,7 +23,6 @@ const Product = new Schema(
           price: 0,
         },
       ],
-      required: true,
     },
 
     // the number of products sold

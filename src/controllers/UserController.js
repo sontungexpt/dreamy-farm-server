@@ -146,6 +146,7 @@ class UserController {
     }
   };
 
+  //[PUT] /user/updateFavoriteProducts
   updateFavoriteProducts = async (req, res) => {
     try {
       const userInfo = res.locals._userInfo;
@@ -222,29 +223,6 @@ class UserController {
         status: 'success',
         message: 'Update profile successfully',
         data: userInfo,
-      });
-    } catch (error) {
-      res.send({ status: 'error', message: error.message, error: error });
-    }
-  };
-
-  getOrders = async (req, res) => {
-    try {
-      const userInfo = res.locals._userInfo;
-      const orders = await Order.find({ user: userInfo._id });
-
-      if (!orders) {
-        return res.json({
-          status: 'error',
-          message: 'Orders not found',
-          data: 'Orders not found',
-        });
-      }
-
-      res.json({
-        status: 'success',
-        message: 'Get orders successfully',
-        data: orders,
       });
     } catch (error) {
       res.send({ status: 'error', message: error.message, error: error });
