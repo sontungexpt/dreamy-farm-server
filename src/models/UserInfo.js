@@ -26,7 +26,7 @@ const UserInfo = new Schema({
     default: [],
   },
   avatar: { type: String, default: '' },
-  favoriteProducts: [{ type: ObjectId, ref: 'Product' }],
+  // favoriteProducts: [{ type: ObjectId, ref: 'Product' }],
 });
 
 UserInfo.index({ email: 1 });

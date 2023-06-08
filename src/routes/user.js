@@ -10,9 +10,7 @@ const userController = new UserController();
 const middlewares = {
   '/userInfos': [checkUserInfo],
   '/feedback': [checkIsUser, checkUserInfo],
-  '/updateFavoriteProducts': [checkIsUser, checkUserInfo],
   '/getOrders': [checkIsUser, checkUserInfo],
-  '/getFavoriteProducts': [checkIsUser],
   '/updateProfile': [checkIsUser, checkUserInfo],
 };
 
@@ -27,10 +25,6 @@ router.post('/login', userController.login);
 router.post('/userInfos', userController.getUserInfos);
 
 router.post('/feedback', userController.feedback);
-
-router.put('/updateFavoriteProducts', userController.updateFavoriteProducts);
-
-router.post('/getFavoriteProducts', userController.getFavoriteProducts);
 
 router.put('/updateProfile', userController.updateProfile);
 
