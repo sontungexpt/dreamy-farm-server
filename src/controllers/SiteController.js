@@ -68,6 +68,11 @@ class SiteController {
         limit,
       });
 
+      productsResult.data = productsResult.data.map((item) => ({
+        ...item._doc,
+        typeSearch: 'product',
+      }));
+
       const recipesResult = await this.searchAtModel({
         keySearch,
         model: Recipe,
@@ -75,9 +80,17 @@ class SiteController {
         limit,
       });
 
+      recipesResult.data = recipesResult.data.map((item) => ({
+        ...item._doc,
+        typeSearch: 'recipe',
+      }));
+
       // combine 2 array
       const total = productsResult.total + recipesResult.total;
       const data = [...productsResult.data, ...recipesResult.data];
+
+      // priority: product > recipe
+      const dataResult = data.slice(0, productsResult.limit);
 
       const response = {
         status: 'success',
@@ -85,7 +98,7 @@ class SiteController {
         total,
         page: productsResult.page,
         limit: productsResult.limit,
-        data,
+        data: dataResult,
       };
 
       res.status(200).json(response);
