@@ -4,7 +4,7 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports["default"] = void 0;
-var _Product = _interopRequireDefault(require("../models/Product"));
+var _Order = _interopRequireDefault(require("../models/Order"));
 var _checkParams = _interopRequireDefault(require("../utils/checkParams"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -17,149 +17,103 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-var ProductController = /*#__PURE__*/_createClass(function ProductController() {
-  _classCallCheck(this, ProductController);
-  _defineProperty(this, "getProductAtCategory", /*#__PURE__*/function () {
+var OrderController = /*#__PURE__*/_createClass(function OrderController() {
+  _classCallCheck(this, OrderController);
+  // [GET] /user/getOrders
+  _defineProperty(this, "getOrders", /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {
-      var findStatus, _req$params, status, category, products;
+      var userInfo, orders;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
         while (1) switch (_context.prev = _context.next) {
           case 0:
             _context.prev = 0;
-            findStatus = 'stock';
-            _req$params = req.params, status = _req$params.status, category = _req$params.category;
-            (0, _checkParams["default"])(req.params, 'category');
-            if (status) {
-              findStatus = status;
-            }
-            _context.next = 7;
-            return _Product["default"].find({
-              category: category,
-              status: findStatus
+            userInfo = res.locals._userInfo;
+            _context.next = 4;
+            return _Order["default"].find({
+              user: userInfo._id
             });
+          case 4:
+            orders = _context.sent;
+            if (orders) {
+              _context.next = 7;
+              break;
+            }
+            return _context.abrupt("return", res.json({
+              status: 'error',
+              message: 'Orders not found',
+              data: 'Orders not found'
+            }));
           case 7:
-            products = _context.sent;
             res.json({
               status: 'success',
-              data: products
+              message: 'Get orders successfully',
+              data: orders
             });
-            _context.next = 14;
+            _context.next = 13;
             break;
-          case 11:
-            _context.prev = 11;
+          case 10:
+            _context.prev = 10;
             _context.t0 = _context["catch"](0);
-            res.status(404).json({
+            res.send({
               status: 'error',
               message: _context.t0.message,
               error: _context.t0
             });
-          case 14:
+          case 13:
           case "end":
             return _context.stop();
         }
-      }, _callee, null, [[0, 11]]);
+      }, _callee, null, [[0, 10]]);
     }));
     return function (_x, _x2) {
       return _ref.apply(this, arguments);
     };
   }());
-  _defineProperty(this, "create", /*#__PURE__*/function () {
+  // [POST] /user/createOrder
+  _defineProperty(this, "createOrder", /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
+      var userInfo, _req$body, products, address, phoneNumber, order;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
-            _context2.next = 2;
-            return _Product["default"].create({
-              name: 'apple',
-              image: '',
-              category: 'fruit',
-              type: [{
-                name: '100g',
-                price: 100
-              }, {
-                name: '200g',
-                price: 200
-              }, {
-                name: '300g',
-                price: 300
-              }],
-              description: "It's an fruit",
-              sold: 0,
-              status: 'active'
+            _context2.prev = 0;
+            userInfo = res.locals._userInfo;
+            _req$body = req.body, products = _req$body.products, address = _req$body.address, phoneNumber = _req$body.phoneNumber;
+            (0, _checkParams["default"])(req.body, 'products', 'address', 'phoneNumber');
+            _context2.next = 6;
+            return _Order["default"].create({
+              user: userInfo._id,
+              products: products,
+              address: address,
+              phoneNumber: phoneNumber
             });
-          case 2:
+          case 6:
+            order = _context2.sent;
             res.json({
               status: 'success',
-              message: 'Create product successfully'
+              message: 'Create order successfully',
+              data: order
             });
-          case 3:
+            _context2.next = 13;
+            break;
+          case 10:
+            _context2.prev = 10;
+            _context2.t0 = _context2["catch"](0);
+            res.send({
+              status: 'error',
+              message: _context2.t0.message,
+              error: _context2.t0
+            });
+          case 13:
           case "end":
             return _context2.stop();
         }
-      }, _callee2);
+      }, _callee2, null, [[0, 10]]);
     }));
     return function (_x3, _x4) {
       return _ref2.apply(this, arguments);
     };
   }());
-  _defineProperty(this, "show", /*#__PURE__*/function () {
-    var _ref3 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee3(req, res) {
-      var slug, product;
-      return _regeneratorRuntime().wrap(function _callee3$(_context3) {
-        while (1) switch (_context3.prev = _context3.next) {
-          case 0:
-            _context3.prev = 0;
-            slug = req.params.slug;
-            if (slug) {
-              _context3.next = 4;
-              break;
-            }
-            return _context3.abrupt("return", res.status(404).json({
-              status: 'error',
-              message: 'Slug is not found',
-              required: 'slug'
-            }));
-          case 4:
-            _context3.next = 6;
-            return _Product["default"].findOne({
-              slug: slug
-            });
-          case 6:
-            product = _context3.sent;
-            if (product) {
-              _context3.next = 9;
-              break;
-            }
-            return _context3.abrupt("return", res.status(404).json({
-              status: 'error',
-              message: 'Product not found'
-            }));
-          case 9:
-            res.json({
-              status: 'success',
-              message: 'Product found',
-              data: product
-            });
-            _context3.next = 15;
-            break;
-          case 12:
-            _context3.prev = 12;
-            _context3.t0 = _context3["catch"](0);
-            res.status(404).json({
-              status: 'error',
-              message: _context3.t0.message,
-              error: _context3.t0
-            });
-          case 15:
-          case "end":
-            return _context3.stop();
-        }
-      }, _callee3, null, [[0, 12]]);
-    }));
-    return function (_x5, _x6) {
-      return _ref3.apply(this, arguments);
-    };
-  }());
 });
-var _default = ProductController;
+var _default = OrderController;
 exports["default"] = _default;

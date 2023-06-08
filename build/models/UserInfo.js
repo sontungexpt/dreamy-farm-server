@@ -15,9 +15,15 @@ var UserInfo = new Schema({
     required: true,
     maxlength: 255
   },
-  fullName: {
+  name: {
     type: String,
-    "default": ''
+    required: true,
+    maxlength: 255
+  },
+  sex: {
+    type: String,
+    "default": '',
+    maxlength: 255
   },
   addreses: {
     type: Array,
@@ -26,7 +32,7 @@ var UserInfo = new Schema({
         return array.every(function (v) {
           var addressValidated = typeof v.address === 'string';
           var phoneNumberValidated = /\d{3}-\d{3}-\d{4}/.test(v.phoneNumber) || v.phoneNumber === '';
-          var addressActiveValidated = typeof v.addressActive === 'number';
+          var addressActiveValidated = typeof v.active === 'number';
           return addressValidated && phoneNumberValidated && addressActiveValidated;
         });
       },

@@ -16,21 +16,17 @@ var middlewares = {
   '/feedback': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo],
   '/updateFavoriteProducts': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo],
   '/getOrders': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo],
-  '/getFavoriteProducts': [_UserMiddlewares.checkIsUser]
+  '/getFavoriteProducts': [_UserMiddlewares.checkIsUser],
+  '/updateProfile': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo]
 };
-
-// Object.keys(middlewares).forEach((path) => {
-//   router.use(path, ...middlewares[path]);
-// });
-
 (0, _useMiddlewares["default"])(router, middlewares);
 router.post('/register', userController.register);
 router.post('/forgot-password', userController.forgotPassword);
 router.post('/login', userController.login);
 router.post('/userInfos', userController.getUserInfos);
 router.post('/feedback', userController.feedback);
-router.post('/updateFavoriteProducts', userController.updateFavoriteProducts);
+router.put('/updateFavoriteProducts', userController.updateFavoriteProducts);
 router.post('/getFavoriteProducts', userController.getFavoriteProducts);
-router.get('/getOrders', userController.getOrders);
+router.put('/updateProfile', userController.updateProfile);
 var _default = router;
 exports["default"] = _default;

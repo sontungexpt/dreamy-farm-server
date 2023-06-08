@@ -9,6 +9,7 @@ var _Feedback = _interopRequireDefault(require("../models/Feedback"));
 var _User = _interopRequireDefault(require("../models/User"));
 var _UserInfo = _interopRequireDefault(require("../models/UserInfo"));
 var _Order = _interopRequireDefault(require("../models/Order"));
+var _checkParams = _interopRequireDefault(require("../utils/checkParams"));
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 var _configs = _interopRequireDefault(require("../configs"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
@@ -169,7 +170,8 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
             } catch (error) {
               res.send({
                 status: 'error',
-                message: error
+                message: error.message,
+                error: error
               });
             }
           case 1:
@@ -218,7 +220,8 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
             _context5.t0 = _context5["catch"](0);
             res.send({
               status: 'error',
-              message: _context5.t0
+              message: _context5.t0.message,
+              error: _context5.t0
             });
           case 13:
           case "end":
@@ -230,6 +233,7 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
       return _ref5.apply(this, arguments);
     };
   }());
+  //[PUT] /user/updateFavoriteProducts
   _defineProperty(this, "updateFavoriteProducts", /*#__PURE__*/function () {
     var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
       var userInfo, _req$body2, productId, method, productExistIndex;
@@ -274,9 +278,10 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
           case 9:
             _context6.prev = 9;
             _context6.t0 = _context6["catch"](0);
-            res.send({
+            res.json({
               status: 'error',
-              message: _context6.t0
+              message: err.message,
+              error: err
             });
           case 12:
           case "end":
@@ -288,6 +293,7 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
       return _ref6.apply(this, arguments);
     };
   }());
+  //[POST] /user/feedback
   _defineProperty(this, "feedback", /*#__PURE__*/function () {
     var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
       var userInfo, content;
@@ -297,62 +303,56 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
             _context7.prev = 0;
             userInfo = res.locals._userInfo;
             content = req.body.content;
-            if (content) {
-              _context7.next = 5;
-              break;
-            }
-            return _context7.abrupt("return", res.json({
-              status: 'error',
-              message: 'Content is required',
-              required: 'content'
-            }));
-          case 5:
-            _context7.next = 7;
+            (0, _checkParams["default"])(req.body, 'content');
+            _context7.next = 6;
             return _Feedback["default"].create({
               user: userInfo._id,
               content: content
             });
-          case 7:
+          case 6:
             res.json({
               status: 'success',
               message: 'Feedback successfully'
             });
-            _context7.next = 13;
+            _context7.next = 12;
             break;
-          case 10:
-            _context7.prev = 10;
+          case 9:
+            _context7.prev = 9;
             _context7.t0 = _context7["catch"](0);
             res.json({
               status: 'error',
-              message: _context7.t0
+              message: _context7.t0.message,
+              error: _context7.t0
             });
-          case 13:
+          case 12:
           case "end":
             return _context7.stop();
         }
-      }, _callee7, null, [[0, 10]]);
+      }, _callee7, null, [[0, 9]]);
     }));
     return function (_x13, _x14) {
       return _ref7.apply(this, arguments);
     };
   }());
+  // [PUT] /user/profile
   _defineProperty(this, "updateProfile", /*#__PURE__*/function () {
     var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
-      var userInfo, _req$body3, name, address;
+      var userInfo, _req$body3, name, sex;
       return _regeneratorRuntime().wrap(function _callee8$(_context8) {
         while (1) switch (_context8.prev = _context8.next) {
           case 0:
             _context8.prev = 0;
             userInfo = res.locals._userInfo;
-            _req$body3 = req.body, name = _req$body3.name, address = _req$body3.address;
+            _req$body3 = req.body, name = _req$body3.name, sex = _req$body3.sex;
             if (name) userInfo.name = name;
-            if (address) userInfo.address = address;
+            if (sex) userInfo.sex = sex;
             _context8.next = 7;
             return userInfo.save();
           case 7:
             res.json({
               status: 'success',
-              message: 'Update profile successfully'
+              message: 'Update profile successfully',
+              data: userInfo
             });
             _context8.next = 13;
             break;
@@ -361,7 +361,8 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
             _context8.t0 = _context8["catch"](0);
             res.send({
               status: 'error',
-              message: _context8.t0
+              message: _context8.t0.message,
+              error: _context8.t0
             });
           case 13:
           case "end":
@@ -371,54 +372,6 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
     }));
     return function (_x15, _x16) {
       return _ref8.apply(this, arguments);
-    };
-  }());
-  _defineProperty(this, "getOrders", /*#__PURE__*/function () {
-    var _ref9 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee9(req, res) {
-      var userInfo, orders;
-      return _regeneratorRuntime().wrap(function _callee9$(_context9) {
-        while (1) switch (_context9.prev = _context9.next) {
-          case 0:
-            _context9.prev = 0;
-            userInfo = res.locals._userInfo;
-            _context9.next = 4;
-            return _Order["default"].find({
-              user: userInfo._id
-            });
-          case 4:
-            orders = _context9.sent;
-            if (orders) {
-              _context9.next = 7;
-              break;
-            }
-            return _context9.abrupt("return", res.json({
-              status: 'error',
-              message: 'Orders not found',
-              data: 'Orders not found'
-            }));
-          case 7:
-            res.json({
-              status: 'success',
-              message: 'Get orders successfully',
-              data: orders
-            });
-            _context9.next = 13;
-            break;
-          case 10:
-            _context9.prev = 10;
-            _context9.t0 = _context9["catch"](0);
-            res.send({
-              status: 'error',
-              message: _context9.t0
-            });
-          case 13:
-          case "end":
-            return _context9.stop();
-        }
-      }, _callee9, null, [[0, 10]]);
-    }));
-    return function (_x17, _x18) {
-      return _ref9.apply(this, arguments);
     };
   }());
 });

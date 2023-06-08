@@ -18,7 +18,7 @@ var Product = new Schema({
   }],
   name: {
     type: String,
-    reuired: true
+    required: true
   },
   image: {
     type: String,
@@ -28,13 +28,12 @@ var Product = new Schema({
     type: String,
     required: true
   },
-  type: {
+  types: {
     type: Array,
     "default": [{
       name: '',
       price: 0
-    }],
-    required: true
+    }]
   },
   // the number of products sold
   sold: {
