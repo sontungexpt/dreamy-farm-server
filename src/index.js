@@ -7,7 +7,7 @@ import cors from 'cors';
 import properties from '~/configs';
 import route from '~/routes';
 import db from '~/configs/database';
-import initialProducts from '~/utils/initialProducts';
+import { initialProducts, initialRecipes } from '~/utils/initial';
 
 const app = express();
 const PORT = process.env.PORT || properties.PORT;
@@ -22,6 +22,7 @@ app.use(methodOverride('_method'));
 db.connect();
 
 initialProducts();
+initialRecipes();
 
 route(app);
 
