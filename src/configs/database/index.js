@@ -5,8 +5,15 @@ const dbConfigs = properties.DB;
 
 async function connect() {
   try {
+    // await mongoose.connect(
+    //   `mongodb://${dbConfigs.HOST}:${dbConfigs.PORT}/${dbConfigs.NAME}`,
+    //   {
+    //     useNewUrlParser: true,
+    //     useUnifiedTopology: true,
+    //   },
+    // );
     await mongoose.connect(
-      `mongodb://${dbConfigs.HOST}:${dbConfigs.PORT}/${dbConfigs.NAME}`,
+      `mongodb+srv://sontungexpt:sontungexpt@cluster0.dlbsxe8.mongodb.net/`,
       {
         useNewUrlParser: true,
         useUnifiedTopology: true,
