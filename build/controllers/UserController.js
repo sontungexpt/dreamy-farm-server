@@ -184,127 +184,18 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
       return _ref4.apply(this, arguments);
     };
   }());
-  _defineProperty(this, "getFavoriteProducts", /*#__PURE__*/function () {
+  //[POST] /user/feedback
+  _defineProperty(this, "feedback", /*#__PURE__*/function () {
     var _ref5 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee5(req, res) {
-      var user, userInfo;
+      var userInfo, content;
       return _regeneratorRuntime().wrap(function _callee5$(_context5) {
         while (1) switch (_context5.prev = _context5.next) {
           case 0:
             _context5.prev = 0;
-            user = res.locals._user;
-            _context5.next = 4;
-            return _UserInfo["default"].findOne({
-              email: user.email
-            }).populate('favoriteProducts').exec();
-          case 4:
-            userInfo = _context5.sent;
-            if (userInfo) {
-              _context5.next = 7;
-              break;
-            }
-            return _context5.abrupt("return", res.json({
-              status: 'error',
-              message: 'User infos not found',
-              data: 'User infos not found'
-            }));
-          case 7:
-            res.json({
-              status: 'success',
-              message: 'Get favorite products successfully',
-              data: userInfo.favoriteProducts
-            });
-            _context5.next = 13;
-            break;
-          case 10:
-            _context5.prev = 10;
-            _context5.t0 = _context5["catch"](0);
-            res.send({
-              status: 'error',
-              message: _context5.t0.message,
-              error: _context5.t0
-            });
-          case 13:
-          case "end":
-            return _context5.stop();
-        }
-      }, _callee5, null, [[0, 10]]);
-    }));
-    return function (_x9, _x10) {
-      return _ref5.apply(this, arguments);
-    };
-  }());
-  //[PUT] /user/updateFavoriteProducts
-  _defineProperty(this, "updateFavoriteProducts", /*#__PURE__*/function () {
-    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
-      var userInfo, _req$body2, productId, method, productExistIndex;
-      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
-        while (1) switch (_context6.prev = _context6.next) {
-          case 0:
-            _context6.prev = 0;
-            userInfo = res.locals._userInfo;
-            _req$body2 = req.body, productId = _req$body2.productId, method = _req$body2.method; // pass method to middleware
-            if (method) {
-              if (method === 'add') {
-                userInfo.favoriteProducts.push(productId);
-              } else if (method === 'remove') {
-                userInfo.favoriteProducts = userInfo.favoriteProducts.filter(function (item) {
-                  return item.toString() !== productId;
-                });
-              }
-            } else {
-              // if not pass method to middleware,
-              // update favoriteProducts with mehtod = toggle
-              productExistIndex = userInfo.favoriteProducts.findIndex(function (item) {
-                return item.toString() === productId;
-              });
-              if (productExistIndex === -1) {
-                userInfo.favoriteProducts.push(productId);
-              } else {
-                userInfo.favoriteProducts = userInfo.favoriteProducts.filter(function (item) {
-                  return item.toString() !== productId;
-                });
-              }
-            }
-            res.json({
-              status: 'success',
-              message: 'Update favorite products successfully',
-              data: userInfo.favoriteProducts
-            });
-            _context6.next = 7;
-            return userInfo.save();
-          case 7:
-            _context6.next = 12;
-            break;
-          case 9:
-            _context6.prev = 9;
-            _context6.t0 = _context6["catch"](0);
-            res.json({
-              status: 'error',
-              message: err.message,
-              error: err
-            });
-          case 12:
-          case "end":
-            return _context6.stop();
-        }
-      }, _callee6, null, [[0, 9]]);
-    }));
-    return function (_x11, _x12) {
-      return _ref6.apply(this, arguments);
-    };
-  }());
-  //[POST] /user/feedback
-  _defineProperty(this, "feedback", /*#__PURE__*/function () {
-    var _ref7 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee7(req, res) {
-      var userInfo, content;
-      return _regeneratorRuntime().wrap(function _callee7$(_context7) {
-        while (1) switch (_context7.prev = _context7.next) {
-          case 0:
-            _context7.prev = 0;
             userInfo = res.locals._userInfo;
             content = req.body.content;
             (0, _checkParams["default"])(req.body, 'content');
-            _context7.next = 6;
+            _context5.next = 6;
             return _Feedback["default"].create({
               user: userInfo._id,
               content: content
@@ -314,39 +205,39 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
               status: 'success',
               message: 'Feedback successfully'
             });
-            _context7.next = 12;
+            _context5.next = 12;
             break;
           case 9:
-            _context7.prev = 9;
-            _context7.t0 = _context7["catch"](0);
+            _context5.prev = 9;
+            _context5.t0 = _context5["catch"](0);
             res.json({
               status: 'error',
-              message: _context7.t0.message,
-              error: _context7.t0
+              message: _context5.t0.message,
+              error: _context5.t0
             });
           case 12:
           case "end":
-            return _context7.stop();
+            return _context5.stop();
         }
-      }, _callee7, null, [[0, 9]]);
+      }, _callee5, null, [[0, 9]]);
     }));
-    return function (_x13, _x14) {
-      return _ref7.apply(this, arguments);
+    return function (_x9, _x10) {
+      return _ref5.apply(this, arguments);
     };
   }());
   // [PUT] /user/profile
   _defineProperty(this, "updateProfile", /*#__PURE__*/function () {
-    var _ref8 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee8(req, res) {
-      var userInfo, _req$body3, name, sex;
-      return _regeneratorRuntime().wrap(function _callee8$(_context8) {
-        while (1) switch (_context8.prev = _context8.next) {
+    var _ref6 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee6(req, res) {
+      var userInfo, _req$body2, name, sex;
+      return _regeneratorRuntime().wrap(function _callee6$(_context6) {
+        while (1) switch (_context6.prev = _context6.next) {
           case 0:
-            _context8.prev = 0;
+            _context6.prev = 0;
             userInfo = res.locals._userInfo;
-            _req$body3 = req.body, name = _req$body3.name, sex = _req$body3.sex;
+            _req$body2 = req.body, name = _req$body2.name, sex = _req$body2.sex;
             if (name) userInfo.name = name;
             if (sex) userInfo.sex = sex;
-            _context8.next = 7;
+            _context6.next = 7;
             return userInfo.save();
           case 7:
             res.json({
@@ -354,24 +245,24 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
               message: 'Update profile successfully',
               data: userInfo
             });
-            _context8.next = 13;
+            _context6.next = 13;
             break;
           case 10:
-            _context8.prev = 10;
-            _context8.t0 = _context8["catch"](0);
+            _context6.prev = 10;
+            _context6.t0 = _context6["catch"](0);
             res.send({
               status: 'error',
-              message: _context8.t0.message,
-              error: _context8.t0
+              message: _context6.t0.message,
+              error: _context6.t0
             });
           case 13:
           case "end":
-            return _context8.stop();
+            return _context6.stop();
         }
-      }, _callee8, null, [[0, 10]]);
+      }, _callee6, null, [[0, 10]]);
     }));
-    return function (_x15, _x16) {
-      return _ref8.apply(this, arguments);
+    return function (_x11, _x12) {
+      return _ref6.apply(this, arguments);
     };
   }());
 });

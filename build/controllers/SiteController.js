@@ -6,6 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 exports["default"] = void 0;
 var _Product = _interopRequireDefault(require("../models/Product"));
 var _Recipe = _interopRequireDefault(require("../models/Recipe"));
+var _findAtModel = _interopRequireDefault(require("../utils/findAtModel"));
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "default": obj }; }
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
@@ -31,58 +32,25 @@ var SiteController = /*#__PURE__*/function () {
     _classCallCheck(this, SiteController);
     _defineProperty(this, "searchAtModel", /*#__PURE__*/function () {
       var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(_ref) {
-        var keySearch, sort, model, _ref$page, page, _ref$limit, limit, sortBy, result, total;
+        var keySearch, sort, model, _ref$page, page, _ref$limit, limit;
         return _regeneratorRuntime().wrap(function _callee$(_context) {
           while (1) switch (_context.prev = _context.next) {
             case 0:
               keySearch = _ref.keySearch, sort = _ref.sort, model = _ref.model, _ref$page = _ref.page, page = _ref$page === void 0 ? 1 : _ref$page, _ref$limit = _ref.limit, limit = _ref$limit === void 0 ? 5 : _ref$limit;
-              if (typeof page === 'string') {
-                page = parseInt(page);
-              }
-              if (typeof limit === 'string') {
-                limit = parseInt(limit);
-              }
-              page = page - 1; // page = 1 => page = 0
-              sortBy = {};
-              if (sort) {
-                sort = sort.trim(); // remove space example: 'sold ' => 'sold'
-                sort = sort.split(','); // split string to array
-                sort = sort.map(function (item) {
-                  return item.trim();
-                }); // remove space in array
-
-                if (sort[1]) {
-                  sortBy[sort[0]] = sort[1];
-                } else {
-                  sortBy[sort[0]] = 'asc'; //default sort asc
-                }
-              }
-              _context.next = 8;
-              return model.find({
-                name: {
-                  $regex: keySearch,
-                  $options: 'i'
-                }
-              }).sort(sortBy).skip(page * limit) // done
-              .limit(limit);
-            case 8:
-              result = _context.sent;
-              _context.next = 11;
-              return model.countDocuments({
-                name: {
-                  $regex: keySearch,
-                  $options: 'i'
-                }
-              });
-            case 11:
-              total = _context.sent;
-              return _context.abrupt("return", {
-                total: total,
-                page: page + 1,
+              keySearch = keySearch.replace(/\\/g, '\\\\');
+              return _context.abrupt("return", (0, _findAtModel["default"])({
+                model: model,
+                page: page,
                 limit: limit,
-                data: result
-              });
-            case 13:
+                find: {
+                  name: {
+                    $regex: keySearch,
+                    $options: 'i'
+                  }
+                },
+                sort: sort
+              }));
+            case 3:
             case "end":
               return _context.stop();
           }

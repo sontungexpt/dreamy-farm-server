@@ -14,9 +14,7 @@ var userController = new _UserController["default"]();
 var middlewares = {
   '/userInfos': [_UserMiddlewares.checkUserInfo],
   '/feedback': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo],
-  '/updateFavoriteProducts': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo],
   '/getOrders': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo],
-  '/getFavoriteProducts': [_UserMiddlewares.checkIsUser],
   '/updateProfile': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo]
 };
 (0, _useMiddlewares["default"])(router, middlewares);
@@ -25,8 +23,6 @@ router.post('/forgot-password', userController.forgotPassword);
 router.post('/login', userController.login);
 router.post('/userInfos', userController.getUserInfos);
 router.post('/feedback', userController.feedback);
-router.put('/updateFavoriteProducts', userController.updateFavoriteProducts);
-router.post('/getFavoriteProducts', userController.getFavoriteProducts);
 router.put('/updateProfile', userController.updateProfile);
 var _default = router;
 exports["default"] = _default;
