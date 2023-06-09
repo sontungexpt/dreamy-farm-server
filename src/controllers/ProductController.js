@@ -13,6 +13,7 @@ class ProductController {
       }
 
       const products = await Product.find({ category, status: findStatus });
+
       res.json({ status: 'success', data: products });
     } catch (err) {
       res

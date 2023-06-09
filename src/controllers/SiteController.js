@@ -1,5 +1,6 @@
 import Product from '~/models/Product';
 import Recipe from '~/models/Recipe';
+import findAtModel from '~/utils/findAtModel';
 
 class SiteController {
   index(req, res, next) {
@@ -15,45 +16,16 @@ class SiteController {
     page = 1,
     limit = 5,
   }) => {
-    if (typeof page === 'string') {
-      page = parseInt(page);
-    }
-    if (typeof limit === 'string') {
-      limit = parseInt(limit);
-    }
-    page = page - 1; // page = 1 => page = 0
-
-    let sortBy = {};
-    if (sort) {
-      sort = sort.trim(); // remove space example: 'sold ' => 'sold'
-      sort = sort.split(','); // split string to array
-      sort = sort.map((item) => item.trim()); // remove space in array
-
-      if (sort[1]) {
-        sortBy[sort[0]] = sort[1];
-      } else {
-        sortBy[sort[0]] = 'asc'; //default sort asc
-      }
-    }
-
-    const result = await model
-      .find({
-        name: { $regex: keySearch, $options: 'i' },
-      })
-      .sort(sortBy)
-      .skip(page * limit) // done
-      .limit(limit); // done
-
-    const total = await model.countDocuments({
-      name: { $regex: keySearch, $options: 'i' },
-    });
-
-    return {
-      total,
-      page: page + 1,
+    keySearch = keySearch.replace(/\\/g, '\\\\');
+    return findAtModel({
+      model,
+      page,
       limit,
-      data: result,
-    };
+      find: {
+        name: { $regex: keySearch, $options: 'i' },
+      },
+      sort,
+    });
   };
 
   search = async (req, res) => {
