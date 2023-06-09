@@ -8,7 +8,7 @@ const router = express.Router();
 const userController = new UserController();
 
 const middlewares = {
-  '/userInfos': [checkUserInfo],
+  '/infos': [checkUserInfo],
   '/feedback': [checkIsUser, checkUserInfo],
   '/getOrders': [checkIsUser, checkUserInfo],
   '/updateProfile': [checkIsUser, checkUserInfo],
@@ -22,7 +22,7 @@ router.post('/forgot-password', userController.forgotPassword);
 
 router.post('/login', userController.login);
 
-router.post('/userInfos', userController.getUserInfos);
+router.post('/infos', userController.getUserInfos);
 
 router.post('/feedback', userController.feedback);
 

@@ -12,7 +12,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 var router = _express["default"].Router();
 var userController = new _UserController["default"]();
 var middlewares = {
-  '/userInfos': [_UserMiddlewares.checkUserInfo],
+  '/infos': [_UserMiddlewares.checkUserInfo],
   '/feedback': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo],
   '/getOrders': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo],
   '/updateProfile': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo]
@@ -21,7 +21,7 @@ var middlewares = {
 router.post('/register', userController.register);
 router.post('/forgot-password', userController.forgotPassword);
 router.post('/login', userController.login);
-router.post('/userInfos', userController.getUserInfos);
+router.post('/infos', userController.getUserInfos);
 router.post('/feedback', userController.feedback);
 router.put('/updateProfile', userController.updateProfile);
 var _default = router;

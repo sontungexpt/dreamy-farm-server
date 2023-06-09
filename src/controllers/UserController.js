@@ -5,7 +5,6 @@ import bcrypt from 'bcrypt';
 import Feedback from '~/models/Feedback';
 import User from '~/models/User';
 import UserInfo from '~/models/UserInfo';
-import Order from '~/models/Order';
 import checkParams from '~/utils/checkParams';
 
 import jwt from 'jsonwebtoken';
@@ -107,6 +106,7 @@ class UserController {
     }
   };
 
+  //[GET] /user/infos
   getUserInfos = async (req, res) => {
     try {
       const userInfo = res.locals._userInfo;

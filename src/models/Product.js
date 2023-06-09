@@ -13,6 +13,7 @@ const Product = new Schema(
     name: { type: String, required: true },
     image: { type: String, default: '' },
 
+    //category: fruit, vegetable, herb_aromatic, frozen, meat_seafood, dairy_egg
     category: { type: String, required: true },
 
     types: {

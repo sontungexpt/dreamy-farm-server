@@ -8,6 +8,8 @@ class ProductController {
       const { status, category } = req.params;
       checkParams(req.params, 'category');
 
+      //category: fruit, vegetable, herb_aromatic, frozen, meat_seafood, dairy_egg
+
       if (status) {
         findStatus = status;
       }

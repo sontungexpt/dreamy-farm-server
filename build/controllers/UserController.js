@@ -8,7 +8,6 @@ var _bcrypt = _interopRequireDefault(require("bcrypt"));
 var _Feedback = _interopRequireDefault(require("../models/Feedback"));
 var _User = _interopRequireDefault(require("../models/User"));
 var _UserInfo = _interopRequireDefault(require("../models/UserInfo"));
-var _Order = _interopRequireDefault(require("../models/Order"));
 var _checkParams = _interopRequireDefault(require("../utils/checkParams"));
 var _jsonwebtoken = _interopRequireDefault(require("jsonwebtoken"));
 var _configs = _interopRequireDefault(require("../configs"));
@@ -154,6 +153,7 @@ var UserController = /*#__PURE__*/_createClass(function UserController() {
       return _ref3.apply(this, arguments);
     };
   }());
+  //[GET] /user/infos
   _defineProperty(this, "getUserInfos", /*#__PURE__*/function () {
     var _ref4 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee4(req, res) {
       var userInfo;
