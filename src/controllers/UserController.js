@@ -160,6 +160,138 @@ class UserController {
       res.send({ status: 'error', message: error.message, error: error });
     }
   };
+
+  // [PUT] /user/addAddress
+  addAddress = async (req, res) => {
+    try {
+      const userInfo = res.locals._userInfo;
+
+      const { phoneNumber, address } = req.body;
+      checkParams(req.body, 'phoneNumber', 'address');
+
+      // check if address is existed
+      const oldAddress = userInfo.addreses.find(
+        (item) => item.phoneNumber === phoneNumber && item.address === address,
+      );
+
+      if (oldAddress) {
+        return res.json({
+          status: 'error',
+          message: 'Address is existed',
+          data: userInfo.addreses,
+        });
+      }
+
+      // change active of old address
+      userInfo.addreses = userInfo.addreses.map((item) => ({
+        ...item,
+        active: false,
+      }));
+
+      userInfo.addreses.push({
+        phoneNumber,
+        address,
+        active: true,
+      });
+
+      await userInfo.save();
+
+      res.json({
+        status: 'success',
+        message: 'Add address successfully',
+        data: userInfo.addreses,
+      });
+    } catch (error) {
+      res.send({ status: 'error', message: error.message, error: error });
+    }
+  };
+
+  // [PUT] /user/updateAddress
+  updateAddress = async (req, res) => {
+    try {
+      const userInfo = res.locals._userInfo;
+
+      const {
+        oldPhoneNumber,
+        oldAddress,
+        newPhoneNumber,
+        newAddress,
+        newActive,
+      } = req.body;
+      checkParams(req.body, 'active', 'oldPhoneNumber', 'oldAddress');
+
+      // find address by phoneNumber and current address
+      const addressIndex = userInfo.addreses.findIndex(
+        (item) =>
+          item.phoneNumber === oldPhoneNumber && item.addreses === oldAddress,
+      );
+
+      // if address is not existed
+      if (addressIndex === -1) {
+        return res.json({ status: 'error', message: 'Address is not existed' });
+      } else {
+        if (newActive) {
+          userInfo.addreses.forEach((item) => {
+            item.active = false;
+          });
+        }
+
+        userInfo.addreses[addressIndex].address = newAddress || oldAddress;
+        userInfo.addreses[addressIndex].phoneNumber =
+          newPhoneNumber || oldPhoneNumber;
+        userInfo.addreses[addressIndex].active =
+          newActive || userInfo.addreses[addressIndex].active;
+      }
+
+      await userInfo.save();
+
+      res.json({
+        status: 'success',
+        message: 'Update address successfully',
+        data: userInfo.addreses,
+      });
+    } catch (error) {
+      res.send({ status: 'error', message: error.message, error: error });
+    }
+  };
+
+  // [PUT] /user/deleteAddress
+  deleteAddress = async (req, res) => {
+    try {
+      const userInfo = res.locals._userInfo;
+
+      const { phoneNumber, address } = req.body;
+      checkParams(req.body, 'phoneNumber', 'address');
+
+      // find address by phoneNumber and current address
+      const addressIndex = userInfo.addreses.findIndex(
+        (item) => item.phoneNumber === phoneNumber && item.address === address,
+      );
+
+      // if address is not existed
+      if (addressIndex === -1) {
+        return res.json({ status: 'error', message: 'Address is not existed' });
+      } else {
+        if (userInfo.addreses[addressIndex].active) {
+          // if address is active, set first address is active
+          if (userInfo.addreses.length > 0) {
+            userInfo.addreses[0].active = true;
+          }
+        }
+        userInfo.addreses.splice(addressIndex, 1);
+      }
+
+      await userInfo.save();
+
+      res.json({
+        status: 'success',
+        message: 'Delete address successfully',
+        data: userInfo.addreses,
+      });
+    } catch (error) {
+      res.send({ status: 'error', message: error.message, error: error });
+    }
+  };
 }
 
 export default UserController;

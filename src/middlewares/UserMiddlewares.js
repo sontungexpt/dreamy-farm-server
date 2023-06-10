@@ -25,7 +25,7 @@ export const checkToken = async (req, res, next) => {
     }
     next();
   } catch (error) {
-    res.json({ status: 'error', message: error });
+    res.json({ status: 'error', message: error.message, error: error });
   }
 };
 
@@ -63,7 +63,7 @@ export const checkUser = async (req, res, next) => {
     }
     next();
   } catch (error) {
-    res.json({ status: 'error', message: error });
+    res.json({ status: 'error', message: error.message, error: error });
   }
 };
 
@@ -85,7 +85,7 @@ const checkRole = (req, res, next, role) => {
     }
     return next();
   } catch (error) {
-    return res.json({ status: 'error', message: error });
+    return res.json({ status: 'error', message: error.message, error: error });
   }
 };
 
@@ -117,6 +117,6 @@ export const checkUserInfo = async (req, res, next) => {
     res.locals._userInfo = userInfo;
     next();
   } catch (err) {
-    res.json({ status: 'error', message: err });
+    res.json({ status: 'error', message: err.message, error: err });
   }
 };
