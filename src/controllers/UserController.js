@@ -194,6 +194,7 @@ class UserController {
         active: true,
       });
 
+      userInfo.markModified('addreses');
       await userInfo.save();
 
       res.json({
@@ -218,38 +219,40 @@ class UserController {
         newAddress,
         newActive,
       } = req.body;
-      checkParams(req.body, 'active', 'oldPhoneNumber', 'oldAddress');
+      checkParams(req.body, 'oldPhoneNumber', 'oldAddress');
 
       // find address by phoneNumber and current address
       const addressIndex = userInfo.addreses.findIndex(
         (item) =>
-          item.phoneNumber === oldPhoneNumber && item.addreses === oldAddress,
+          item.phoneNumber === oldPhoneNumber && item.address === oldAddress,
       );
 
       // if address is not existed
       if (addressIndex === -1) {
         return res.json({ status: 'error', message: 'Address is not existed' });
       } else {
+        // change active of old address to false
         if (newActive) {
-          userInfo.addreses.forEach((item) => {
-            item.active = false;
-          });
+          userInfo.addreses = userInfo.addreses.map((item) => ({
+            ...item,
+            active: false,
+          }));
         }
 
-        userInfo.addreses[addressIndex].address = newAddress || oldAddress;
-        userInfo.addreses[addressIndex].phoneNumber =
-          newPhoneNumber || oldPhoneNumber;
-        userInfo.addreses[addressIndex].active =
-          newActive || userInfo.addreses[addressIndex].active;
+        if (newAddress) userInfo.addreses[addressIndex].address = newAddress;
+        if (newPhoneNumber)
+          userInfo.addreses[addressIndex].phoneNumber = newPhoneNumber;
+        if (newActive) userInfo.addreses[addressIndex].active = newActive;
+
+        userInfo.markModified('addreses');
+        await userInfo.save();
+
+        res.json({
+          status: 'success',
+          message: 'Update address successfully',
+          data: userInfo.addreses,
+        });
       }
-
-      await userInfo.save();
-
-      res.json({
-        status: 'success',
-        message: 'Update address successfully',
-        data: userInfo.addreses,
-      });
     } catch (error) {
       res.send({ status: 'error', message: error.message, error: error });
     }
@@ -272,22 +275,25 @@ class UserController {
       if (addressIndex === -1) {
         return res.json({ status: 'error', message: 'Address is not existed' });
       } else {
-        if (userInfo.addreses[addressIndex].active) {
-          // if address is active, set first address is active
+        const removeActive = userInfo.addreses[addressIndex].active;
+
+        userInfo.addreses.splice(addressIndex, 1);
+
+        if (removeActive) {
           if (userInfo.addreses.length > 0) {
             userInfo.addreses[0].active = true;
           }
         }
-        userInfo.addreses.splice(addressIndex, 1);
+
+        userInfo.markModified('addreses');
+        await userInfo.save();
+
+        res.json({
+          status: 'success',
+          message: 'Delete address successfully',
+          data: userInfo.addreses,
+        });
       }
-
-      await userInfo.save();
-
-      res.json({
-        status: 'success',
-        message: 'Delete address successfully',
-        data: userInfo.addreses,
-      });
     } catch (error) {
       res.send({ status: 'error', message: error.message, error: error });
     }
