@@ -10,6 +10,9 @@ import checkParams from '~/utils/checkParams';
 import jwt from 'jsonwebtoken';
 import properties from '~/configs';
 
+const Token = require('../models/token');
+const crypto = require('crypto');
+const sendEmail = require('../utils/sendEmail');
 class UserController {
   forgotPassword = async (req, res) => {
     // const { email } = req.body;
@@ -57,24 +60,57 @@ class UserController {
       const encryptedPassword = await bcrypt.hash(password, 10);
 
       // check if email is existed
-      const oldUser = res.locals._user;
-      if (oldUser) {
+      let user = await User.findOne({ email: req.body.email });
+      if (user) {
         return res.json({ status: 'error', message: 'Email is existed' });
       }
-
-      // create new user
-      await User.create({
+      const salt = await bcrypt.genSalt(Number(properties.SALT));
+      user = await User.create({
         email,
         password: encryptedPassword,
       });
+      const token = await new Token({
+        userId: user._id,
+        token: crypto.randomBytes(32).toString('hex'),
+      }).save();
+      const url = `${properties.BASE_URL}users/${user.id}/verify/${token.token}`;
+      await sendEmail(user.email, 'Verify Email', url);
+      res
+        .status(201)
+        .send({ message: 'An Email sent to your account please verify' });
+
+      // // create new user
+      // await User.create({
+      //   email,
+      //   password: encryptedPassword,
+      // });
       await UserInfo.create({
         name,
         email,
       });
 
-      return res.json({ status: 'success', message: 'Register successfully' });
+      // return res.json({ status: 'success', message: 'Register successfully' });
     } catch (error) {
       res.json({ status: 'error', message: error });
+    }
+  };
+  verify = async (req, res) => {
+    try {
+      const user = await User.findOne({ _id: req.params.id });
+      if (!user) return res.status(400).send({ message: 'Invalid link' });
+
+      const token = await Token.findOne({
+        userId: user._id,
+        token: req.params.token,
+      });
+      if (!token) return res.status(400).send({ message: 'Invalid link' });
+
+      await User.updateOne({ _id: user._id, verified: true });
+      await token.remove();
+
+      res.status(200).send({ message: 'Email verified successfully' });
+    } catch (error) {
+      res.status(500).send({ message: 'Internal Server Error' });
     }
   };
 

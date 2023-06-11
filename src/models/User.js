@@ -11,6 +11,7 @@ const User = new Schema(
       type: [String],
       default: ['user'],
     },
+    verified: { type: Boolean, default: false },
 
     // active, blocked, deleted
     status: { type: String, default: 'active' },

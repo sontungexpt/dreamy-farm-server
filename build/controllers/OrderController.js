@@ -19,7 +19,7 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _ty
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var OrderController = /*#__PURE__*/_createClass(function OrderController() {
   _classCallCheck(this, OrderController);
-  // [GET] /user/getOrders
+  // [GET] /order/getOrders
   _defineProperty(this, "getOrders", /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {
       var userInfo, orders;
@@ -69,23 +69,24 @@ var OrderController = /*#__PURE__*/_createClass(function OrderController() {
       return _ref.apply(this, arguments);
     };
   }());
-  // [POST] /user/createOrder
+  // [POST] /order/createOrder
   _defineProperty(this, "createOrder", /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
-      var userInfo, _req$body, products, address, phoneNumber, order;
+      var userInfo, _req$body, products, address, phoneNumber, paymentMethod, order;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             _context2.prev = 0;
             userInfo = res.locals._userInfo;
-            _req$body = req.body, products = _req$body.products, address = _req$body.address, phoneNumber = _req$body.phoneNumber;
-            (0, _checkParams["default"])(req.body, 'products', 'address', 'phoneNumber');
+            _req$body = req.body, products = _req$body.products, address = _req$body.address, phoneNumber = _req$body.phoneNumber, paymentMethod = _req$body.paymentMethod;
+            (0, _checkParams["default"])(req.body, 'products', 'address', 'phoneNumber', 'paymentMethod');
             _context2.next = 6;
             return _Order["default"].create({
               user: userInfo._id,
               products: products,
               address: address,
-              phoneNumber: phoneNumber
+              phoneNumber: phoneNumber,
+              paymentMethod: paymentMethod
             });
           case 6:
             order = _context2.sent;

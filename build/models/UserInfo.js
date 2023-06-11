@@ -31,13 +31,20 @@ var UserInfo = new Schema({
       validator: function validator(array) {
         return array.every(function (v) {
           var addressValidated = typeof v.address === 'string';
-          var phoneNumberValidated = /\d{3}-\d{3}-\d{4}/.test(v.phoneNumber) || v.phoneNumber === '';
-          var addressActiveValidated = typeof v.active === 'number';
+          var phoneNumberValidated = /^(\d{3})[- ]?(\d{3})[- ]?(\d{4})$/.test(v.phoneNumber) || v.phoneNumber === '';
+          var addressActiveValidated = typeof v.active === 'boolean';
           return addressValidated && phoneNumberValidated && addressActiveValidated;
         });
       },
       message: function message(props) {
-        return "".concat(props.array, " is not a valid address");
+        for (var i = 0; i < props.value.length; i++) {
+          var addressValidated = typeof props.value[i].address === 'string';
+          if (!addressValidated) return "".concat(props.value[i].address, " is not a valid address!");
+          var phoneNumberValidated = /^(\d{3})[- ]?(\d{3})[- ]?(\d{4})$/.test(props.value[i].phoneNumber) || props.value[i].phoneNumber === '';
+          if (!phoneNumberValidated) return "".concat(props.value[i].phoneNumber, " is not a valid phone number!");
+          var addressActiveValidated = typeof props.value[i].active === 'boolean';
+          if (!addressActiveValidated) return "".concat(props.value[i].active, " is not a valid active!");
+        }
       }
     },
     "default": []
@@ -46,9 +53,7 @@ var UserInfo = new Schema({
     type: String,
     "default": ''
   }
-  // favoriteProducts: [{ type: ObjectId, ref: 'Product' }],
 });
-
 UserInfo.index({
   email: 1
 });

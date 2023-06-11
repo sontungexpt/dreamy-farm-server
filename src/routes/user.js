@@ -20,6 +20,7 @@ const middlewares = {
 useMiddlewares(router, middlewares);
 
 router.post('/register', userController.register);
+router.get('/verify', userController.verify);
 
 router.post('/forgot-password', userController.forgotPassword);
 
