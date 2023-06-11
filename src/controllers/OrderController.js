@@ -2,7 +2,7 @@ import Order from '~/models/Order';
 import checkParams from '~/utils/checkParams';
 
 class OrderController {
-  // [GET] /user/getOrders
+  // [GET] /order/getOrders
   getOrders = async (req, res) => {
     try {
       const userInfo = res.locals._userInfo;
@@ -26,18 +26,25 @@ class OrderController {
     }
   };
 
-  // [POST] /user/createOrder
+  // [POST] /order/createOrder
   createOrder = async (req, res) => {
     try {
       const userInfo = res.locals._userInfo;
-      const { products, address, phoneNumber } = req.body;
-      checkParams(req.body, 'products', 'address', 'phoneNumber');
+      const { products, address, phoneNumber, paymentMethod } = req.body;
+      checkParams(
+        req.body,
+        'products',
+        'address',
+        'phoneNumber',
+        'paymentMethod',
+      );
 
       const order = await Order.create({
         user: userInfo._id,
         products,
         address,
         phoneNumber,
+        paymentMethod,
       });
 
       res.json({

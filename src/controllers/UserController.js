@@ -182,6 +182,14 @@ class UserController {
         });
       }
 
+      // count address
+      if (userInfo.addreses.length === 12) {
+        return res.json({
+          status: 'warning',
+          message: 'You can only add 12 addresses, please delete some address',
+        });
+      }
+
       // change active of old address
       userInfo.addreses = userInfo.addreses.map((item) => ({
         ...item,
@@ -237,6 +245,25 @@ class UserController {
             ...item,
             active: false,
           }));
+        }
+
+        let notChange = true;
+        if (newAddress && newAddress !== oldAddress) {
+          notChange = false;
+        } else if (newPhoneNumber && newPhoneNumber !== oldPhoneNumber) {
+          notChange = false;
+        } else if (
+          newActive &&
+          newActive !== userInfo.addreses[addressIndex].active
+        ) {
+          notChange = false;
+        }
+
+        if (notChange) {
+          return res.json({
+            status: 'success',
+            message: 'Nothing change',
+          });
         }
 
         if (newAddress) userInfo.addreses[addressIndex].address = newAddress;
