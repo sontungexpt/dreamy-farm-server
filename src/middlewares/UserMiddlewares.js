@@ -33,7 +33,15 @@ export const checkUser = async (req, res, next) => {
   try {
     // no token
     if (!res.locals._user) {
-      const { email, method } = req.body;
+      // post put delete
+      let email = req.body?.email;
+
+      // get
+      if (!email) {
+        email = req.query?.email;
+      }
+
+      const { method } = req.body;
 
       if (!email) {
         return res.json({

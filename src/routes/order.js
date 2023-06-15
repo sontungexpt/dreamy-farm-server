@@ -8,11 +8,13 @@ const router = express.Router();
 const orderController = new OrderController();
 
 const middlewares = {
-  '/getOrders': [checkIsUser, checkUserInfo],
+  '/get': [checkIsUser, checkUserInfo],
+  '/create': [checkIsUser, checkUserInfo],
 };
 
 useMiddlewares(router, middlewares);
 
-router.get('/getOrders', orderController.getOrders);
+router.get('/get', orderController.get);
+router.post('/create', orderController.create);
 
 export default router;

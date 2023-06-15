@@ -21,7 +21,7 @@ function route(app) {
 
   app.use('/user', checkToken, checkUser, userRouter);
 
-  app.use('/order', orderRouter);
+  app.use('/order', checkToken, checkUser, orderRouter);
 
   app.use('/', siteRouter);
 }

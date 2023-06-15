@@ -3,7 +3,7 @@ import checkParams from '~/utils/checkParams';
 
 class OrderController {
   // [GET] /order/getOrders
-  getOrders = async (req, res) => {
+  get = async (req, res) => {
     try {
       const userInfo = res.locals._userInfo;
       const orders = await Order.find({ user: userInfo._id });
@@ -27,30 +27,31 @@ class OrderController {
   };
 
   // [POST] /order/createOrder
-  createOrder = async (req, res) => {
+  create = async (req, res) => {
     try {
       const userInfo = res.locals._userInfo;
-      const { products, address, phoneNumber, paymentMethod } = req.body;
+      const { products, address, phoneNumber, paymentMethod, price } = req.body;
       checkParams(
         req.body,
         'products',
         'address',
         'phoneNumber',
         'paymentMethod',
+        'price',
       );
 
-      const order = await Order.create({
+      await Order.create({
         user: userInfo._id,
         products,
         address,
         phoneNumber,
         paymentMethod,
+        price,
       });
 
-      res.json({
+      res.status(200).json({
         status: 'success',
         message: 'Create order successfully',
-        data: order,
       });
     } catch (error) {
       res.send({ status: 'error', message: error.message, error: error });
