@@ -25,6 +25,7 @@ var initialProducts = /*#__PURE__*/function () {
             new _Product["default"]({
               name: 'Product 1',
               price: 10,
+              //category: fruit, vegetable, herb_aromatic, frozen, meat_seafood, dairy_egg
               category: 'fruit',
               types: [{
                 name: '100g',
@@ -33,6 +34,12 @@ var initialProducts = /*#__PURE__*/function () {
                 name: '200g',
                 price: 200
               }],
+              // the number of products sold
+              sold: 1,
+              // the number of products in stock
+              inventory: 0,
+              // status: stock, out-of-stock, incoming
+              status: 'stock',
               description: 'Description 1'
             }).save();
             new _Product["default"]({

@@ -27,10 +27,11 @@ var Order = new Schema({
     "default": 'pending'
   },
   // the list of products in order
-  products: [{
-    type: ObjectId,
-    ref: 'Product'
-  }],
+
+  // errors here
+  // one product must be have one id for type not for just name
+  // temp solution is embed products into order
+  products: [],
   // info of user
   price: {
     type: Number,

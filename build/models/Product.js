@@ -24,6 +24,7 @@ var Product = new Schema({
     type: String,
     "default": ''
   },
+  //category: fruit, vegetable, herb_aromatic, frozen, meat_seafood, dairy_egg
   category: {
     type: String,
     required: true

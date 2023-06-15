@@ -17,7 +17,7 @@ function route(app) {
   app.use('/products', _product["default"]);
   app.use('/user/favoriteProducts', _UserMiddlewares.checkToken, _UserMiddlewares.checkUser, _favoriteProduct["default"]);
   app.use('/user', _UserMiddlewares.checkToken, _UserMiddlewares.checkUser, _user["default"]);
-  app.use('/order', _order["default"]);
+  app.use('/order', _UserMiddlewares.checkToken, _UserMiddlewares.checkUser, _order["default"]);
   app.use('/', _site["default"]);
 }
 var _default = route;

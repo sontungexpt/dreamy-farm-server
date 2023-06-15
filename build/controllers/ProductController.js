@@ -29,6 +29,9 @@ var ProductController = /*#__PURE__*/_createClass(function ProductController() {
             findStatus = 'stock';
             _req$params = req.params, status = _req$params.status, category = _req$params.category;
             (0, _checkParams["default"])(req.params, 'category');
+
+            //category: fruit, vegetable, herb_aromatic, frozen, meat_seafood, dairy_egg
+
             if (status) {
               findStatus = status;
             }

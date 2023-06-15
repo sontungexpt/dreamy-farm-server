@@ -12,9 +12,11 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { "d
 var router = _express["default"].Router();
 var orderController = new _OrderController["default"]();
 var middlewares = {
-  '/getOrders': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo]
+  '/get': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo],
+  '/create': [_UserMiddlewares.checkIsUser, _UserMiddlewares.checkUserInfo]
 };
 (0, _useMiddlewares["default"])(router, middlewares);
-router.get('/getOrders', orderController.getOrders);
+router.get('/get', orderController.get);
+router.post('/create', orderController.create);
 var _default = router;
 exports["default"] = _default;

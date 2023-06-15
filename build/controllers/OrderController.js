@@ -19,8 +19,8 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _ty
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 var OrderController = /*#__PURE__*/_createClass(function OrderController() {
   _classCallCheck(this, OrderController);
-  // [GET] /user/getOrders
-  _defineProperty(this, "getOrders", /*#__PURE__*/function () {
+  // [GET] /order/getOrders
+  _defineProperty(this, "get", /*#__PURE__*/function () {
     var _ref = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee(req, res) {
       var userInfo, orders;
       return _regeneratorRuntime().wrap(function _callee$(_context) {
@@ -69,46 +69,46 @@ var OrderController = /*#__PURE__*/_createClass(function OrderController() {
       return _ref.apply(this, arguments);
     };
   }());
-  // [POST] /user/createOrder
-  _defineProperty(this, "createOrder", /*#__PURE__*/function () {
+  // [POST] /order/createOrder
+  _defineProperty(this, "create", /*#__PURE__*/function () {
     var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res) {
-      var userInfo, _req$body, products, address, phoneNumber, order;
+      var userInfo, _req$body, products, address, phoneNumber, paymentMethod, price;
       return _regeneratorRuntime().wrap(function _callee2$(_context2) {
         while (1) switch (_context2.prev = _context2.next) {
           case 0:
             _context2.prev = 0;
             userInfo = res.locals._userInfo;
-            _req$body = req.body, products = _req$body.products, address = _req$body.address, phoneNumber = _req$body.phoneNumber;
-            (0, _checkParams["default"])(req.body, 'products', 'address', 'phoneNumber');
+            _req$body = req.body, products = _req$body.products, address = _req$body.address, phoneNumber = _req$body.phoneNumber, paymentMethod = _req$body.paymentMethod, price = _req$body.price;
+            (0, _checkParams["default"])(req.body, 'products', 'address', 'phoneNumber', 'paymentMethod', 'price');
             _context2.next = 6;
             return _Order["default"].create({
               user: userInfo._id,
               products: products,
               address: address,
-              phoneNumber: phoneNumber
+              phoneNumber: phoneNumber,
+              paymentMethod: paymentMethod,
+              price: price
             });
           case 6:
-            order = _context2.sent;
-            res.json({
+            res.status(200).json({
               status: 'success',
-              message: 'Create order successfully',
-              data: order
+              message: 'Create order successfully'
             });
-            _context2.next = 13;
+            _context2.next = 12;
             break;
-          case 10:
-            _context2.prev = 10;
+          case 9:
+            _context2.prev = 9;
             _context2.t0 = _context2["catch"](0);
             res.send({
               status: 'error',
               message: _context2.t0.message,
               error: _context2.t0
             });
-          case 13:
+          case 12:
           case "end":
             return _context2.stop();
         }
-      }, _callee2, null, [[0, 10]]);
+      }, _callee2, null, [[0, 9]]);
     }));
     return function (_x3, _x4) {
       return _ref2.apply(this, arguments);

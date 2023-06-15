@@ -51,7 +51,8 @@ var checkToken = /*#__PURE__*/function () {
           _context.t0 = _context["catch"](0);
           res.json({
             status: 'error',
-            message: _context.t0
+            message: _context.t0.message,
+            error: _context.t0
           });
         case 13:
         case "end":
@@ -66,18 +67,23 @@ var checkToken = /*#__PURE__*/function () {
 exports.checkToken = checkToken;
 var checkUser = /*#__PURE__*/function () {
   var _ref2 = _asyncToGenerator( /*#__PURE__*/_regeneratorRuntime().mark(function _callee2(req, res, next) {
-    var _req$body, email, method, user;
+    var _req$body, email, _req$query, method, user;
     return _regeneratorRuntime().wrap(function _callee2$(_context2) {
       while (1) switch (_context2.prev = _context2.next) {
         case 0:
           _context2.prev = 0;
           if (res.locals._user) {
-            _context2.next = 15;
+            _context2.next = 17;
             break;
           }
-          _req$body = req.body, email = _req$body.email, method = _req$body.method;
+          // post put delete
+          email = (_req$body = req.body) === null || _req$body === void 0 ? void 0 : _req$body.email; // get
+          if (!email) {
+            email = (_req$query = req.query) === null || _req$query === void 0 ? void 0 : _req$query.email;
+          }
+          method = req.body.method;
           if (email) {
-            _context2.next = 5;
+            _context2.next = 7;
             break;
           }
           return _context2.abrupt("return", res.json({
@@ -85,54 +91,55 @@ var checkUser = /*#__PURE__*/function () {
             message: 'You need to login to use this feature',
             required: 'email'
           }));
-        case 5:
-          _context2.next = 7;
+        case 7:
+          _context2.next = 9;
           return _User["default"].findOne({
             email: email
           });
-        case 7:
+        case 9:
           user = _context2.sent;
           if (user) {
-            _context2.next = 12;
+            _context2.next = 14;
             break;
           }
           if (!(method === 'register')) {
-            _context2.next = 11;
+            _context2.next = 13;
             break;
           }
           return _context2.abrupt("return", next());
-        case 11:
+        case 13:
           return _context2.abrupt("return", res.json({
             status: 'error',
             message: 'User not found'
           }));
-        case 12:
+        case 14:
           if (!(user.status === 'blocked')) {
-            _context2.next = 14;
+            _context2.next = 16;
             break;
           }
           return _context2.abrupt("return", res.json({
             status: 'error',
             message: 'User are no longer authorized to access this account'
           }));
-        case 14:
+        case 16:
           res.locals._user = user;
-        case 15:
+        case 17:
           next();
-          _context2.next = 21;
+          _context2.next = 23;
           break;
-        case 18:
-          _context2.prev = 18;
+        case 20:
+          _context2.prev = 20;
           _context2.t0 = _context2["catch"](0);
           res.json({
             status: 'error',
-            message: _context2.t0
+            message: _context2.t0.message,
+            error: _context2.t0
           });
-        case 21:
+        case 23:
         case "end":
           return _context2.stop();
       }
-    }, _callee2, null, [[0, 18]]);
+    }, _callee2, null, [[0, 20]]);
   }));
   return function checkUser(_x4, _x5, _x6) {
     return _ref2.apply(this, arguments);
@@ -158,7 +165,8 @@ var checkRole = function checkRole(req, res, next, role) {
   } catch (error) {
     return res.json({
       status: 'error',
-      message: error
+      message: error.message,
+      error: error
     });
   }
 };
@@ -246,7 +254,8 @@ var checkUserInfo = /*#__PURE__*/function () {
           _context6.t0 = _context6["catch"](0);
           res.json({
             status: 'error',
-            message: _context6.t0
+            message: _context6.t0.message,
+            error: _context6.t0
           });
         case 14:
         case "end":
