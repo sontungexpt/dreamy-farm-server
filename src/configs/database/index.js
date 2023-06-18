@@ -12,13 +12,6 @@ async function connect() {
         useUnifiedTopology: true,
       },
     );
-    // await mongoose.connect(
-    //   `mongodb+srv://sontungexpt:sontungexpt@cluster0.dlbsxe8.mongodb.net/`,
-    //   {
-    //     useNewUrlParser: true,
-    //     useUnifiedTopology: true,
-    //   },
-    // );
     console.log('Database connected successfully');
   } catch (error) {
     console.log('Database connection failed');
