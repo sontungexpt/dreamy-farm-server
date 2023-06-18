@@ -22,11 +22,18 @@ function _connect() {
         case 0:
           _context.prev = 0;
           _context.next = 3;
-          return _mongoose["default"].connect("mongodb+srv://sontungexpt:sontungexpt@cluster0.dlbsxe8.mongodb.net/", {
+          return _mongoose["default"].connect("mongodb://".concat(dbConfigs.HOST, ":").concat(dbConfigs.PORT, "/").concat(dbConfigs.NAME), {
             useNewUrlParser: true,
             useUnifiedTopology: true
           });
         case 3:
+          // await mongoose.connect(
+          //   `mongodb+srv://sontungexpt:sontungexpt@cluster0.dlbsxe8.mongodb.net/`,
+          //   {
+          //     useNewUrlParser: true,
+          //     useUnifiedTopology: true,
+          //   },
+          // );
           console.log('Database connected successfully');
           _context.next = 9;
           break;
