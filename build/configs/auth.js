@@ -5,6 +5,6 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports["default"] = void 0;
 var _default = {
-  secret: 'huyenthoai-secret-key'
+  secret: 'DREAMS_SECRET_KEY'
 };
 exports["default"] = _default;

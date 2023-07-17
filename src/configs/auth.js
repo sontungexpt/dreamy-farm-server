@@ -1,3 +1,3 @@
 export default {
-  secret: 'huyenthoai-secret-key',
+  secret: 'DREAMS_SECRET_KEY',
 };

@@ -1,12 +1,13 @@
+import 'dotenv/config';
+
 const properties = {
   DB: {
-    PORT: 27017,
-    HOST: 'localhost',
-    NAME: 'dreamy_farm',
+    PORT: process.env.DB_PORT || 27017,
+    HOST: process.env.DB_HOST || 'localhost',
+    NAME: process.env.DB_NAME || 'dreamy_farm',
   },
-  PORT: 3001,
-  JWT_SECRET:
-    'hvdvay6ert72839289()aiyg8t87qt72393293883uhefiuh78ttq3ifi78272jbkj?[]]pou89ywe',
+  PORT: process.env.RUNNING_PORT || 3001,
+  JWT_SECRET: process.env.ACCESS_TOKEN_SECRET || 'secret',
 };
 
 export default properties;
