@@ -1,6 +1,6 @@
 # Dreamy-farm-server
 
-The api server for dreamy farm website
+The api server for dreamy farm website with local mongodb
 
 ## 1. How to run this repo
 
